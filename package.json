@@ -11,6 +11,11 @@
     "vue": "^3.2.33",
     "vue-router": "^4.0.14"
   },
+  "buildDependencies": {
+    "esbuild": "^0.17.19",
+    "@vitejs/plugin-vue": "^2.3.1",
+    "vite": "^2.9.5"
+  },
   "devDependencies": {
     "esbuild": "^0.17.19",
     "@vitejs/plugin-vue": "^2.3.1",
