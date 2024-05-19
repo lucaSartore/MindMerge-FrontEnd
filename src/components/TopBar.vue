@@ -1,20 +1,19 @@
 
 <script setup>
-import { reactive } from 'vue';
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink} from 'vue-router'
 
-import { loggedUser } from '../states/loggedUser';
+import { isUserLoggedIn} from '../states/loggedUser';
 
 </script>
 
 <template>
   <div class="top-bar">
-      <nav v-if = "loggedUser.id == undefined">
+      <nav v-if = "!isUserLoggedIn()">
         <RouterLink to="/about_us">About Us</RouterLink>
         <RouterLink to="/sign_in">Sign In</RouterLink>
         <RouterLink to="/sign_up">Sign Up</RouterLink>
       </nav>
-      <nav v-if = "loggedUser.id != undefined">
+      <nav v-if = "isUserLoggedIn()">
         <RouterLink to="/home">Home</RouterLink>
         <RouterLink to="/reports">Reports</RouterLink>
         <RouterLink to="/organization">Organizations</RouterLink>
