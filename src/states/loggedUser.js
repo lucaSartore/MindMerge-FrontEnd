@@ -3,8 +3,10 @@
 import { reactive } from 'vue'
 import {expectSuccess} from '../util/expect.js'
 const loggedUser = reactive({
-    token: undefined,
-    id: undefined,
+    // token: undefined,
+    // id: undefined,
+    token: "token",
+    id: 3,
 })
 
 function isUserLoggedIn () {
