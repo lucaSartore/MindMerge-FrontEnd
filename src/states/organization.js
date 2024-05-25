@@ -1,5 +1,5 @@
 import { reactive } from 'vue'
-import { getUser , getOrganization} from '../util/back_end_calls'
+import { getUser , getOrganizationName} from '../util/back_end_calls'
 import {loggedUser} from './loggedUser.js'
 
 export const organization = reactive({
@@ -21,8 +21,8 @@ export async function updateOrganization() {
     let organizations = user.organizations.map(
         async function(organizationId){
             return {
-                id: await getOrganization(organizationId),
-                name: organization.organizationName
+                id: organizationId,
+                name: await getOrganizationName(organizationId)
             }
         }
     )

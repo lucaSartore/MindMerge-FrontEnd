@@ -47,3 +47,10 @@ export async function getOrganization(organizationId){
     response = await response.json();
     return expectSuccess(response);
 }
+
+
+export async function getOrganizationName(organizationId){
+    let response = await fetch(HOST + '/api/v1/organization/' + organizationId + '/name')
+    response = await response.json();
+    return expectSuccess(response);
+}
