@@ -1,6 +1,6 @@
 npm run build
 
-mv 404.html dist/404.html
+cp 404.html dist/404.html
 
 cd dist
 
