@@ -2,6 +2,8 @@ set -e
 
 npm run build
 
+cp 404.html dist/404.html
+
 cd dist
 
 git init
