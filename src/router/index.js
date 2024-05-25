@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-
+import { setLoggedUser } from '../states/loggedUser';
 import { isUserLoggedIn } from '../states/loggedUser';
 
 
@@ -72,6 +72,27 @@ const router = createRouter({
       path: '/about_us',
       name: 'about_us',
       component: () => import('../views/AboutUs.vue'),
+    },
+    {
+      path: '/after_sign_up',
+      name: 'after_sign_up',
+      // make request to back end with the token
+      beforeEnter: async function(to, from, next) {
+        let response = to.query.response;
+        response = JSON.parse(response);
+        setLoggedUser(response);
+        next({ name: 'home' })
+      } 
+    },
+    {
+      path: '/after_sign_in',
+      name: 'after_sign_in',
+      beforeEnter: async function(to, from, next) {
+        let response = to.query.response;
+        response = JSON.parse(response);
+        setLoggedUser(response);
+        next({ name: 'home' })
+      } 
     },
     {
       path: '/:pathMatch(.*)*',
