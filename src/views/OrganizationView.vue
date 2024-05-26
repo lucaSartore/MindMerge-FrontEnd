@@ -23,17 +23,17 @@ async function createOrganization(organizationName) {
 /**
 * @type {{id: number, name: string}[]}
 */
-let UserList = ref([]);
+let userList = ref([]);
 
 function deleteUserFromOrganizationWrapper(userId) {
-  deleteUserFromOrganization(userId, currentOrganization).then(() => {
+  deleteUserFromOrganization(currentOrganization, userId).then(() => {
     updateUserList();
   });
 }
 
 function updateUserList() {
   getOrganizationUsers(currentOrganization).then((v) => {
-    UserList.value = v;
+    userList.value = v;
   });
 }
 
@@ -103,6 +103,14 @@ updateUserList();
           <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
         </div>
       </div>
+
+    <ul>
+      <li v-for="user in userList" :key="user.id">
+        {{ user.name }}
+        <button @click="deleteUserFromOrganizationWrapper(user.id)">Remove</button>
+      </li>
+    </ul>
+
     </div>
 
   </main>
