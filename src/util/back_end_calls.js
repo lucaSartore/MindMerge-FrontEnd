@@ -37,6 +37,11 @@ export async function getUser(userId, userToken) {
     return expectSuccess(response);
 }
 
+export async function getUserIdByName(userName){
+    let response = await fetch(HOST + '/api/v1/user/id?name=' + userName)
+    return await response.json();
+}
+
 /**
  * 
  * @param {number} organizationId 
@@ -48,9 +53,39 @@ export async function getOrganization(organizationId){
     return expectSuccess(response);
 }
 
+/**
+ * 
+ * @param {number} organizationId 
+ * @returns {{id: number, name: string}[]}
+ */
+export async function getOrganizationUsers(organizationId){
+    let response = await fetch(HOST + '/api/v1/organization/' + organizationId + '/users')
+    response = await response.json();
+    return expectSuccess(response);
+}
 
 export async function getOrganizationName(organizationId){
     let response = await fetch(HOST + '/api/v1/organization/' + organizationId + '/name')
+    response = await response.json();
+    return expectSuccess(response);
+}
+
+export async function addUserToOrganization(organizationId, userToAddId){
+    let response = await fetch(HOST + '/api/v1/organization/' + organizationId + '/user/' + userToAddId,
+        {
+            method: 'POST',
+        }
+    )
+    response = await response.json();
+    return expectSuccess(response);
+}
+
+export async function deleteUserFromOrganization(organizationId, userToDeleteId){
+    let response = await fetch(HOST + '/api/v1/organization/' + organizationId + '/user/' + userToDeleteId,
+        {
+            method: 'DELETE',
+        }
+    )
     response = await response.json();
     return expectSuccess(response);
 }

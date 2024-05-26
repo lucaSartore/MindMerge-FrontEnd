@@ -1,6 +1,8 @@
 <script setup>
-import  { ref } from 'vue';
-import {organization} from "../states/organization.js";
+import { ref } from 'vue';
+import { organization } from "../states/organization.js";
+import { getOrganizationUsers, getUserIdByName, addUserToOrganization, deleteUserFromOrganization} from "../util/back_end_calls.js"
+import { defineComponent } from "vue";
 
 const userName = ref('');
 const showPopup = ref(false);
@@ -18,17 +20,41 @@ let organizations = organization.organizations;
 async function createOrganization(organizationName) {
 }
 
-function addUserToOrganization(userName) {
-  if (userName.trim() === "") {
-    return false;
-  }
-  return userName === "validUser";
+/**
+* @type {{id: number, name: string}[]}
+*/
+let UserList = ref([]);
+
+function deleteUserFromOrganizationWrapper(userId) {
+  deleteUserFromOrganization(userId, currentOrganization).then(() => {
+    updateUserList();
+  });
+}
+
+function updateUserList() {
+  getOrganizationUsers(currentOrganization).then((v) => {
+    UserList.value = v;
+  });
+}
+
+function addUserToOrganizationWrapper(userName) {
+  getUserIdByName(userName).then((v) => {
+    if (v.statusCode === 404) {
+      errorMessage.value = "User not found";
+    } else {
+      addUserToOrganization(currentOrganization,v.payload).then(() => {
+        updateUserList();
+        closePopup();
+      });
+    }
+  });
 }
 
 function handleAddUser() {
-  const result = addUserToOrganization(userName.value);
+  const result = addUserToOrganizationWrapper(userName.value);
   if (result) {
     closePopup();
+    updateUserList();
   } else {
     errorMessage.value = "User not found";
   }
@@ -39,6 +65,10 @@ function closePopup() {
   userName.value = '';
   errorMessage.value = '';
 }
+
+
+updateUserList();
+
 </script>
 
 <template>
@@ -46,29 +76,35 @@ function closePopup() {
     <h1>Organization Management</h1>
     <br>
 
-    <label for="organization-select">Select Organization:</label>
-    <select id="organization-select" v-model="currentOrganization" @change="updateCurrentOrganization(currentOrganization)">
-      <option v-for="org in organizations" :key="org.id" :value="org.id">
-        {{ org.name }}
-      </option>
-    </select>
+    <!-- If user already have one or more organizations -->
+    <div v-if="organizations.length != 0">
 
-    <br>
-    <br>
-    <br>
+      <label for="organization-select">Select Organization:</label>
+      <select id="organization-select" v-model="currentOrganization"
+        @change="updateCurrentOrganization(currentOrganization)">
+        <option v-for="org in organizations" :key="org.id" :value="org.id">
+          {{ org.name }}
+        </option>
+      </select>
 
-    <button @click="showPopup = true">Add User to Organization</button>
+      <br>
+      <br>
+      <br>
 
-    <div v-if="showPopup" class="popup">
-      <div class="popup-content">
-        <h2>Add User</h2>
-        <label for="user-name">User Name:</label>
-        <input id="user-name" v-model="userName" type="text" />
-        <button @click="handleAddUser">OK</button>
-        <button @click="closePopup">Cancel</button>
-        <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+      <button @click="showPopup = true">Add User to Organization</button>
+
+      <div v-if="showPopup" class="popup">
+        <div class="popup-content">
+          <h2>Add User</h2>
+          <label for="user-name">User Name:</label>
+          <input id="user-name" v-model="userName" type="text" />
+          <button @click="handleAddUser">OK</button>
+          <button @click="closePopup">Cancel</button>
+          <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+        </div>
       </div>
     </div>
+
   </main>
 </template>
 
@@ -97,4 +133,3 @@ function closePopup() {
   margin-top: 10px;
 }
 </style>
-

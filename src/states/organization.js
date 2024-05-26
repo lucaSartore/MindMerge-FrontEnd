@@ -28,5 +28,8 @@ export async function updateOrganization() {
     )
 
     organization.organizations = await Promise.all(organizations)
+    if(organization.organizations.length > 0){
+        organization.current = organization.organizations[organization.organizations.length-1].id
+    }
 }
 await updateOrganization()
