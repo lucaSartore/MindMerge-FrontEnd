@@ -1,6 +1,9 @@
 
 const HOST = import.meta.env.VITE_HOST || 'http://localhost:9000';
 import { expectSuccess } from "./expect.js";
+import  organizationModule  from "../common_infrastructure_es6/organization.js" 
+const Organization = organizationModule.Organization
+
 /**
  * Get the URL to redirect to for Google OAuth
  * @returns {string}
@@ -90,10 +93,18 @@ export async function deleteUserFromOrganization(organizationId, userToDeleteId)
     return expectSuccess(response);
 }
 
-export async function createOrganization(organizationId, ownerId){
-    let response = await fetch(HOST + '/api/v1/organization/' + organizationId ,
+export async function createOrganization(organizationName, ownerId){
+    
+    let organization = new Organization(0, organizationName, [ownerId], false, new Date(), ownerId);
+    organization = JSON.stringify(organization);
+
+    let response = await fetch(HOST + '/api/v1/organization/',
         {
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: organization,
         }
     )
     response = await response.json();

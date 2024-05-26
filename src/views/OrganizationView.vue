@@ -1,8 +1,9 @@
 <script setup>
 import { ref } from 'vue';
-import { organization } from "../states/organization.js";
-import { getOrganizationUsers, getUserIdByName, addUserToOrganization, deleteUserFromOrganization} from "../util/back_end_calls.js"
+import { organization, updateOrganization } from "../states/organization.js";
+import { getOrganizationUsers, getUserIdByName, addUserToOrganization, deleteUserFromOrganization, createOrganization} from "../util/back_end_calls.js"
 import { defineComponent } from "vue";
+import { loggedUser } from "../states/loggedUser.js";
 
 const userName = ref('');
 const showPopup = ref(false);
@@ -18,10 +19,15 @@ let currentOrganization = organization.current;
 /**
 * @type {{id: number, name: string}[]}
 */
-let organizations = organization.organizations;
+//let organizations = organization.organizations;
 
-async function createOrganization(organizationName) {
-
+async function createOrganizationWrapper(organizationName) {
+  let r = await createOrganization(organizationName,loggedUser.id);
+  if (r != undefined) {
+    await updateOrganization();
+    return true;
+  }
+  return false;
 }
 
 /**
@@ -36,6 +42,9 @@ function deleteUserFromOrganizationWrapper(userId) {
 }
 
 function updateUserList() {
+  if (currentOrganization === undefined) {
+    return;
+  }
   getOrganizationUsers(currentOrganization).then((v) => {
     userList.value = v;
   });
@@ -72,7 +81,7 @@ function closePopup() {
 
 function handleCreateOrganization() {
   if (organizationName.value) {
-    createOrganization(organizationName.value);
+    createOrganizationWrapper(organizationName.value);
     showModal.value = false;
     organizationName.value = '';
   } else {
@@ -107,12 +116,12 @@ updateUserList();
 
 
     <!-- If user already have one or more organizations -->
-    <div v-if="organizations.length != 0">
+    <div v-if="organization.organizations.length != 0">
 
       <label for="organization-select">Select Organization:</label>
       <select id="organization-select" v-model="currentOrganization"
-        @change="updateCurrentOrganization(currentOrganization)">
-        <option v-for="org in organizations" :key="org.id" :value="org.id">
+        @change="updateOrganization(currentOrganization); updateUserList()">
+        <option v-for="org in organization.organizations" :key="org.id" :value="org.id">
           {{ org.name }}
         </option>
       </select>

@@ -16,6 +16,9 @@ export const organization = reactive({
 
 export async function updateOrganization() {
 
+    if(loggedUser.id == undefined){
+        return
+    }
     let user = await getUser(loggedUser.id,loggedUser.token)
 
     let organizations = user.organizations.map(
