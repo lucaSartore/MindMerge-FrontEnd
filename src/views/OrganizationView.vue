@@ -114,8 +114,6 @@ updateUserList();
 
     <br>
 
-
-    <!-- If user already have one or more organizations -->
     <div v-if="organization.organizations.length != 0">
 
       <label for="organization-select">Select Organization:</label>
@@ -156,6 +154,79 @@ updateUserList();
 </template>
 
 <style scoped>
+body {
+  background-color: #f5f5f5;
+  color: #333;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+main {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  color: #333;
+  text-align: center;
+}
+
+button {
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+input, select {
+  background-color: #f5f5f5;
+  color: #333;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 10px 0;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  background-color: #f9f9f9;
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+li button {
+  background-color: #dc3545;
+  font-size: 14px;
+}
+
+li button:hover {
+  background-color: #c82333;
+}
+
 .popup {
   position: fixed;
   top: 0;
@@ -169,10 +240,11 @@ updateUserList();
 }
 
 .popup-content {
-  background: white;
+  background: #ffffff;
   padding: 20px;
   border-radius: 5px;
   text-align: center;
+  width: 300px;
 }
 
 .error {
