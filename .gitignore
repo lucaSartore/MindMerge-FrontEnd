@@ -29,3 +29,5 @@ coverage
 
 .env
 .env.production
+
+/src/common_infrastructure_es6
