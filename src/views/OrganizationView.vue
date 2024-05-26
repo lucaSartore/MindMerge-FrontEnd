@@ -8,6 +8,9 @@ const userName = ref('');
 const showPopup = ref(false);
 const errorMessage = ref('');
 
+const showModal = ref(false);
+const organizationName = ref('');
+
 /**
  * @type {number | undefined}
  */
@@ -18,6 +21,7 @@ let currentOrganization = organization.current;
 let organizations = organization.organizations;
 
 async function createOrganization(organizationName) {
+
 }
 
 /**
@@ -66,6 +70,15 @@ function closePopup() {
   errorMessage.value = '';
 }
 
+function handleCreateOrganization() {
+  if (organizationName.value) {
+    createOrganization(organizationName.value);
+    showModal.value = false;
+    organizationName.value = '';
+  } else {
+    alert('Please enter an organization name.');
+  }
+}
 
 updateUserList();
 
@@ -75,6 +88,23 @@ updateUserList();
   <main>
     <h1>Organization Management</h1>
     <br>
+
+    <button @click="showModal = true">Create Organization</button>
+
+    <br>
+
+    <div v-if="showModal" class="popup">
+      <div class="popup-content">
+        <h2>Create Organization</h2>
+        <input v-model="organizationName" placeholder="Enter organization name">
+        <br>
+        <button @click="handleCreateOrganization">OK</button>
+        <button @click="showModal = false">Cancel</button>
+      </div>
+    </div>
+
+    <br>
+
 
     <!-- If user already have one or more organizations -->
     <div v-if="organizations.length != 0">

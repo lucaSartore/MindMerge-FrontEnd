@@ -89,3 +89,13 @@ export async function deleteUserFromOrganization(organizationId, userToDeleteId)
     response = await response.json();
     return expectSuccess(response);
 }
+
+export async function createOrganization(organizationId, ownerId){
+    let response = await fetch(HOST + '/api/v1/organization/' + organizationId ,
+        {
+            method: 'POST',
+        }
+    )
+    response = await response.json();
+    return expectSuccess(response);
+}
