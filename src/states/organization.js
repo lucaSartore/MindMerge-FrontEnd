@@ -35,4 +35,4 @@ export async function updateOrganization() {
         organization.current = organization.organizations[organization.organizations.length-1].id
     }
 }
-await updateOrganization()
+// await updateOrganization()
