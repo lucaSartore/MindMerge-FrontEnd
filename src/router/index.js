@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { setLoggedUser } from '../states/loggedUser';
 import { isUserLoggedIn } from '../states/loggedUser';
+import { updateOrganization } from '../states/organization';
 
 
 function redirect_home_if_logged_in(to, from, next) {
@@ -81,6 +82,7 @@ const router = createRouter({
         let response = to.query.response;
         response = JSON.parse(response);
         setLoggedUser(response);
+        await updateOrganization();
         next({ name: 'home' })
       } 
     },
@@ -91,6 +93,7 @@ const router = createRouter({
         let response = to.query.response;
         response = JSON.parse(response);
         setLoggedUser(response);
+        await updateOrganization();
         next({ name: 'home' })
       } 
     },

@@ -2,6 +2,7 @@
   "name": "mind_merge",
   "version": "0.0.0",
   "scripts": {
+    "convert": "copyfiles -u 2 src/common_infrastructure/*.js src/common_infrastructure_es6 && cjs-to-es6 src/common_infrastructure_es6/",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview --port 5050"
@@ -11,8 +12,10 @@
     "vue-router": "^4.0.14"
   },
   "devDependencies": {
-    "esbuild": "^0.17.19",
     "@vitejs/plugin-vue": "^2.3.1",
+    "cjs-to-es6": "^2.0.1",
+    "copyfiles": "^2.4.1",
+    "esbuild": "^0.17.19",
     "vite": "^2.9.5"
   }
 }
