@@ -54,7 +54,10 @@ updateTaskTree()
 }
 
 .side_bar {
-  background-color: #6ab6fd;
+  border-color: black;
+  border-radius: 5%;
+  border-width: 4px;
+  border-style: solid;
   float: left;
   width: 25%;
   padding: 20px;
@@ -66,7 +69,6 @@ updateTaskTree()
 .main_content {
   float: right;
   width: 75%;
-  background-color: #ff8989;
   padding: 20px;
   margin: 0px;
   height: 100%;
