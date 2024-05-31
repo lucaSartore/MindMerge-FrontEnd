@@ -16,10 +16,11 @@ import TopBar from '@/components/TopBar.vue'
 <style>
 
 .content {
-  padding-top: 60px; /* Adjust this value to match the height of your TopBar */
-  padding-left: 70px; /* Adjust this value to match the height of your TopBar */
-  padding-right: 70px; /* Adjust this value to match the height of your TopBar */
-  padding-bottom: 60px; /* Adjust this value to match the height of your TopBar */
+  padding-top: 5%;
+  padding-left: 5%;
+  padding-right: 5%;
+  padding-bottom: 60px;
+  margin: 0%;
 }
 
 </style>
