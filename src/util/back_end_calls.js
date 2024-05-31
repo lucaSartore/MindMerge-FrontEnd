@@ -110,3 +110,10 @@ export async function createOrganization(organizationName, ownerId){
     response = await response.json();
     return expectSuccess(response);
 }
+
+export async function getTaskTree(organizationId, userId){
+    let response = await fetch(HOST + "/api/v1/task/task_tree?user_id=" + userId + "&organization_id=" + organizationId)
+        
+    response = await response.json();
+    return expectSuccess(response);
+}
