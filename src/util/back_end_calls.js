@@ -2,6 +2,8 @@
 const HOST = import.meta.env.VITE_HOST || 'http://localhost:9000';
 import { expectSuccess } from "./expect.js";
 import  organizationModule  from "../common_infrastructure_es6/organization.js" 
+import Task from '../common_infrastructure_es6/task.js'
+import TaskStatus from '../common_infrastructure_es6/task_status.js'
 const Organization = organizationModule.Organization
 
 /**
@@ -121,6 +123,43 @@ export async function getTask(taskId, organizationId){
 export async function getTaskTree(organizationId, userId){
     let response = await fetch(HOST + "/api/v1/task/task_tree?user_id=" + userId + "&organization_id=" + organizationId)
         
+    response = await response.json();
+    return expectSuccess(response);
+}
+
+export async function updateTaskName(organization_id, task_id){
+
+}
+
+
+export async function createTask(organizationId, taskName, assignee, manager, taskFatherId){
+     
+    let task = new Task.Task(
+        1,
+        taskFatherId,
+        organizationId,
+        new Date(),
+        taskName,
+        " ",
+        TaskStatus.TaskStatus.Idea,
+        [],
+        assignee,
+        manager,
+        [],
+        false,
+        [],
+        3
+    )
+
+     let response = await fetch(HOST + '/api/v1/task/',
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(task),
+        }
+    )
     response = await response.json();
     return expectSuccess(response);
 }
