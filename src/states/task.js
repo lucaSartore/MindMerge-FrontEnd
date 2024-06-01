@@ -10,12 +10,9 @@ export const selectedTask  = ref({
  * @param {Number} taskId
  */
 export async function setSelectedTask(taskId) {
-
     if (taskId == undefined || organization.current == undefined) {
         selectedTask.value = undefined;
         return;
     }
-   
     selectedTask.value = await getTask(taskId, organization.current);
-
 }

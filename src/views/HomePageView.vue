@@ -6,6 +6,7 @@ import { getTaskTree } from '../util/back_end_calls.js'
 import {loggedUser} from '../states/loggedUser.js'
 import { setSelectedTask } from '../states/task.js';
 import { selectedTask } from '../states/task.js';
+import UpdateButton from '../components/UpdateButton.vue';
 
 var treeData = ref([{}]);
 
@@ -17,10 +18,26 @@ async function updateTaskTree(){
   if (value == null){
     return
   }
+
+  let currentTaskId = selectedTask.value.taskId;
+
+  let currentTaskIdInInTree = JSON.stringify(value).replace(" ","").includes('"taskId":'+currentTaskId)
+
   if (value.length > 0){
-    setSelectedTask(value[0].taskId)
+    if(currentTaskIdInInTree){
+      setSelectedTask(currentTaskId)
+    }else{
+      setSelectedTask(value[0].taskId)
+    }
+  }else{
+    setSelectedTask(undefined);
   }
     treeData.value = value
+}
+
+
+async function updateTaskName(newName){
+  console.log("new task name: " + newName)
 }
 
 updateTaskTree()
@@ -43,7 +60,14 @@ updateTaskTree()
       </div>
       <div class="main_content">
 
-        <h1> Current task: {{ selectedTask.taskName }}</h1>
+        <h1> Current task: {{ selectedTask.taskName }}
+          <UpdateButton 
+            :text="selectedTask.taskName"
+            :updateFunction="updateTaskName"
+            :argsForUpdateFunction="null"
+            :callbackAfterUpdate="updateTaskTree"
+            >
+          </UpdateButton></h1>
 
 
       </div>
