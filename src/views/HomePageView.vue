@@ -5,10 +5,14 @@ import {organization} from '../states/organization.js'
 import { getTaskTree } from '../util/back_end_calls.js'
 import {loggedUser} from '../states/loggedUser.js'
 import { setSelectedTask } from '../states/task.js';
+import { selectedTask } from '../states/task.js';
 
 var treeData = ref([{}]);
 
 async function updateTaskTree(){
+  if (organization.current == undefined){
+    return
+  }
   let value = await getTaskTree(organization.current, loggedUser.id)
   if (value == null){
     return
@@ -38,6 +42,10 @@ updateTaskTree()
         </ul>
       </div>
       <div class="main_content">
+
+        <h1> Current task: {{ selectedTask.taskName }}</h1>
+
+
       </div>
     </div>
 

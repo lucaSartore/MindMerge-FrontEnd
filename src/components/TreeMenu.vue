@@ -36,7 +36,7 @@ async function select() {
             <span :class="{ selected: isSelected }" @click="select">
                 {{ model.taskName }}
             </span>
-            <span :class="{ bold: isSelected }" @click="toggle" class="toggle-icon">
+            <span :class="{ selected: isSelected }" @click="toggle" class="toggle-icon">
                 <span v-if="hasChildren">[{{ isOpen ? '-' : '+' }}]</span>
             </span>
         </div>
@@ -63,10 +63,6 @@ async function select() {
 .selected {
     font-weight: bold;
     color: #007bff;
-}
-
-.bold {
-    font-weight: bold;
 }
 
 .toggle-icon {
