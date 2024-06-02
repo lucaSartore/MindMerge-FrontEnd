@@ -1,50 +1,50 @@
 <script setup>
 import TreeMenu from '../components/TreeMenu.vue';
 import { ref } from 'vue';
-import {organization} from '../states/organization.js'
-import { getTaskTree, createTask} from '../util/back_end_calls.js'
-import {loggedUser} from '../states/loggedUser.js'
+import { organization } from '../states/organization.js'
+import { getTaskTree, createTask } from '../util/back_end_calls.js'
+import { loggedUser } from '../states/loggedUser.js'
 import { setSelectedTask } from '../states/task.js';
 import { selectedTask } from '../states/task.js';
 import UpdateButton from '../components/UpdateButton.vue';
 
 var treeData = ref([{}]);
 
-async function updateTaskTree(){
-  if (organization.current == undefined){
+async function updateTaskTree() {
+  if (organization.current == undefined) {
     return
   }
   let value = await getTaskTree(organization.current, loggedUser.id)
-  if (value == null){
+  if (value == null) {
     return
   }
 
-  let currentTaskId = selectedTask.value.taskId;
+  let currentTaskId = selectedTask.value?.taskId ?? undefined;
 
-  let currentTaskIdInInTree = JSON.stringify(value).replace(" ","").includes('"taskId":'+currentTaskId)
+  let currentTaskIdInInTree = JSON.stringify(value).replace(" ", "").includes('"taskId":' + currentTaskId)
 
-  if (value.length > 0){
-    if(currentTaskIdInInTree){
+  if (value.length > 0) {
+    if (currentTaskIdInInTree) {
       setSelectedTask(currentTaskId)
-    }else{
+    } else {
       setSelectedTask(value[0].taskId)
     }
-  }else{
+  } else {
     setSelectedTask(undefined);
   }
-    treeData.value = value
+  treeData.value = value
 }
 
 
-async function updateTaskName(newName){
+async function updateTaskName(newName) {
   console.log("new task name: " + newName)
 }
 
-async function createChildTask(taskName, taskFatherId){
+async function createChildTask(taskName, taskFatherId) {
   let organizationId = organization.current;
   let manager = loggedUser.id;
   let assignees = [manager];
-  await createTask(organizationId,taskName,assignees,manager,taskFatherId)
+  await createTask(organizationId, taskName, assignees, manager, taskFatherId)
   await updateTaskTree();
 }
 
@@ -60,9 +60,10 @@ updateTaskTree()
   <main>
     <h1>Home Page</h1>
     <br>
-    
-    <div v-if="organization.current == undefined"> You need to select/create an organization from the page "organization" before you can see the details in this page</div>
-  
+
+    <div v-if="organization.current == undefined"> You need to select/create an organization from the page
+      "organization" before you can see the details in this page</div>
+
     <div v-if="organization.current != undefined" class=main_container>
       <div class="side_bar">
         <!-- <TreeMenu class="item" :model="treeData"></TreeMenu > -->
@@ -72,21 +73,17 @@ updateTaskTree()
       </div>
       <div class="main_content">
 
-        <h1> Current task: {{ selectedTask.taskName }}
-          <UpdateButton 
-            :text="selectedTask.taskName"
-            :updateFunction="updateTaskName"
-            :argsForUpdateFunction="null"
-            :callbackAfterUpdate="updateTaskTree"
-            >
-          </UpdateButton></h1>
-          
-          <br>
+        <button @click="createChildTask('New Child Task', selectedTask.taskId)">Add child task </button>
+        <button @click="createChildTask('New Root Task', null)">Add root task </button>
+        <br>
 
-          <button @click="createChildTask('NewChildTask',selectedTask.taskId)">Add child task </button>
-
-
-
+        <div v-if="selectedTask.taskName!= undefined">
+          <h1> Current task: {{ selectedTask.taskName }}
+            <UpdateButton :text="selectedTask.taskName" :updateFunction="updateTaskName" :argsForUpdateFunction="null"
+              :callbackAfterUpdate="updateTaskTree">
+            </UpdateButton>
+          </h1>
+        </div>
 
       </div>
     </div>
