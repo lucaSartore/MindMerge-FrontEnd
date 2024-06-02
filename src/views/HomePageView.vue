@@ -73,7 +73,7 @@ updateTaskTree()
       </div>
       <div class="main_content">
 
-        <button @click="createChildTask('New Child Task', selectedTask.taskId)">Add child task </button>
+        <button v-if="selectedTask.taskName!= undefined" @click="createChildTask('New Child Task', selectedTask.taskId)">Add child task </button>
         <button @click="createChildTask('New Root Task', null)">Add root task </button>
         <br>
 
