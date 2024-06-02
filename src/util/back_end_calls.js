@@ -127,8 +127,12 @@ export async function getTaskTree(organizationId, userId){
     return expectSuccess(response);
 }
 
-export async function updateTaskName(organization_id, task_id){
-
+export async function updateTaskName(organizationId, taskId, newName){
+   let response = await fetch(HOST + '/api/v1/task/'+taskId+'/name/'+newName + "?organization_id=" + organizationId, {
+    method: "PUT"
+   });
+   response = await response.json();
+   return expectSuccess(response);
 }
 
 

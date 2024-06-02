@@ -2,7 +2,7 @@
 import TreeMenu from '../components/TreeMenu.vue';
 import { ref } from 'vue';
 import { organization } from '../states/organization.js'
-import { getTaskTree, createTask } from '../util/back_end_calls.js'
+import { getTaskTree, createTask, updateTaskName } from '../util/back_end_calls.js'
 import { loggedUser } from '../states/loggedUser.js'
 import { setSelectedTask } from '../states/task.js';
 import { selectedTask } from '../states/task.js';
@@ -36,8 +36,8 @@ async function updateTaskTree() {
 }
 
 
-async function updateTaskName(newName) {
-  console.log("new task name: " + newName)
+async function updateTaskNameWrapper(newName) {
+  await updateTaskName(organization.current, selectedTask.value.taskId, newName)
 }
 
 async function createChildTask(taskName, taskFatherId) {
@@ -79,7 +79,7 @@ updateTaskTree()
 
         <div v-if="selectedTask.taskName!= undefined">
           <h1> Current task: {{ selectedTask.taskName }}
-            <UpdateButton :text="selectedTask.taskName" :updateFunction="updateTaskName" :argsForUpdateFunction="null"
+            <UpdateButton :text="selectedTask.taskName" :updateFunction="updateTaskNameWrapper" :argsForUpdateFunction="null"
               :callbackAfterUpdate="updateTaskTree">
             </UpdateButton>
           </h1>
