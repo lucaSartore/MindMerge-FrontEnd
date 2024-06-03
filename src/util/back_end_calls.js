@@ -167,3 +167,11 @@ export async function createTask(organizationId, taskName, assignee, manager, ta
     response = await response.json();
     return expectSuccess(response);
 }
+
+export async function deleteTask(organizationId, taskId){
+    let response = await fetch(HOST + "/api/v1/task/"+taskId+"?organization_id="+organizationId,{
+        method: "DELETE"
+    });
+    response = await response.json();
+    return expectSuccess(response);
+}

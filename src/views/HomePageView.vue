@@ -48,6 +48,12 @@ async function createChildTask(taskName, taskFatherId) {
   await updateTaskTree();
 }
 
+async function deleteTask(){
+  let organizationId = organization.current;
+  let taskId = selectedTask.value.taskId;
+  
+}
+
 createChildTask("Test", 1)
 
 updateTaskTree()
@@ -75,6 +81,7 @@ updateTaskTree()
 
         <button v-if="selectedTask.taskName!= undefined" @click="createChildTask('New Child Task', selectedTask.taskId)">Add child task </button>
         <button @click="createChildTask('New Root Task', null)">Add root task </button>
+        <button v-if="selectedTask.taskName!= undefined" @click="">Delete selected task</button>
         <br>
 
         <div v-if="selectedTask.taskName!= undefined">
