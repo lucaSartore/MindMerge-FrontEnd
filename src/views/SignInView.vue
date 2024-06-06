@@ -2,8 +2,19 @@
 </script>
 
 <template>
-  <main>
-    <h1>Sign In</h1>
-    This is where you can sign in to the MindMerge platform.
-  </main>
+  <div class="sign-in-view">
+    <h2>Sign In</h2>
+    <form @submit.prevent="handleSignIn">
+      <div>
+        <label for="username">Username</label>
+        <input type="text" id="username" v-model="username" />
+      </div>
+      <div>
+        <label for="password">Password</label>
+        <input type="password" id="password" v-model="password" />
+      </div>
+      <button type="submit">Sign In</button>
+    </form>
+    <p v-if="errorMessage">{{ errorMessage }}</p>
+  </div>
 </template>
