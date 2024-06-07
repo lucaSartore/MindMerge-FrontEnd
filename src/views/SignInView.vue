@@ -18,3 +18,5 @@
     <p v-if="errorMessage">{{ errorMessage }}</p>
   </div>
 </template>
+
+<!-- TODO: GIOELE -->
