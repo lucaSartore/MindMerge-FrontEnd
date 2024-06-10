@@ -4,14 +4,17 @@ import { ref } from 'vue';
 const errorMessage = ref('');
 
 const handleGoogleSignIn = () => {
-  window.location.href = '/MindMergeApp/auth/google';
+  window.location.href = '/auth/google'; // Reindirizza l'utente a Google per l'autenticazione
 };
 </script>
 
 <template>
   <div class="sign-in-view">
     <h2>Sign In</h2>
-    <button class="google-sign-in-button" @click="handleGoogleSignIn">Sign In with Google</button>
+    <button class="google-sign-in-button" @click="handleGoogleSignIn">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google icon" width="20" height="20" />
+      Sign In with Google
+    </button>
     <p v-if="errorMessage">{{ errorMessage }}</p>
   </div>
 </template>
