@@ -40,6 +40,10 @@ async function updateTaskNameWrapper(newName) {
   await updateTaskName(organization.current, selectedTask.value.taskId, newName)
 }
 
+async function updateTaskNotesWrapper(newNotes) {
+  await updateTaskNotes(organization.current, selectedTask.value.taskId, newNotes)
+}
+
 async function createChildTask(taskName, taskFatherId) {
   let organizationId = organization.current;
   let manager = loggedUser.id;
@@ -48,17 +52,20 @@ async function createChildTask(taskName, taskFatherId) {
   await updateTaskTree();
 }
 
-async function deleteTask(){
+async function deleteTask() {
   let organizationId = organization.current;
   let taskId = selectedTask.value.taskId;
-  
+
+}
+
+//debugging function to get the current task
+function getCurrentTask() {
+  console.log(selectedTask.value);
 }
 
 createChildTask("Test", 1)
 
 updateTaskTree()
-
-
 
 </script>
 
@@ -78,18 +85,28 @@ updateTaskTree()
         </ul>
       </div>
       <div class="main_content">
-
-        <button v-if="selectedTask.taskName!= undefined" @click="createChildTask('New Child Task', selectedTask.taskId)">Add child task </button>
+        <!--debugging button -->
+        <button @click="getCurrentTask()">get current task</button>
+        <button v-if="selectedTask.taskName != undefined"
+          @click="createChildTask('New Child Task', selectedTask.taskId)">Add child task </button>
         <button @click="createChildTask('New Root Task', null)">Add root task </button>
-        <button v-if="selectedTask.taskName!= undefined" @click="">Delete selected task</button>
+        <button v-if="selectedTask.taskName != undefined" @click="">Delete selected task</button>
         <br>
 
-        <div v-if="selectedTask.taskName!= undefined">
+        <div v-if="selectedTask.taskName != undefined">
           <h1> Current task: {{ selectedTask.taskName }}
-            <UpdateButton :text="selectedTask.taskName" :updateFunction="updateTaskNameWrapper" :argsForUpdateFunction="null"
-              :callbackAfterUpdate="updateTaskTree">
+            <UpdateButton :text="selectedTask.taskName" :updateFunction="updateTaskNameWrapper"
+              :argsForUpdateFunction="null" :callbackAfterUpdate="updateTaskTree">
             </UpdateButton>
           </h1>
+          <br>
+          <div v-if="selectedTask.taskNotes[0] != undefined">
+            <h1> Task Notes: {{ selectedTask.taskNotes[0].notes }}
+              <UpdateButton :text="selectedTask.taskNotes[0].notes" :updateFunction="updateTaskNotesWrapper"
+                :argsForUpdateFunction="null" :callbackAfterUpdate="updateTaskTree">
+              </UpdateButton>
+            </h1>
+          </div>
         </div>
 
       </div>
