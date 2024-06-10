@@ -175,3 +175,18 @@ export async function deleteTask(organizationId, taskId){
     response = await response.json();
     return expectSuccess(response);
 }
+
+export async function addAssigneeToTask(organizationId, taskId, assigneeId){
+    let response = await fetch(HOST + "/api/v1/task/"+taskId+"/assignee/"+assigneeId+"?organization_id="+organizationId,{
+        method: "POST"
+    });
+    return await response.json();
+}
+
+export async function removeAssigneeFromTask(organizationId, taskId, assigneeId){
+    let response = await fetch(HOST + "/api/v1/task/"+taskId+"/assignee/"+assigneeId+"?organization_id="+organizationId,{
+        method: "DELETE"
+    });
+    response = await response.json();
+    return expectSuccess(response);
+}

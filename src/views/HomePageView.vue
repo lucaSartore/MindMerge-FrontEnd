@@ -2,9 +2,9 @@
 import TreeMenu from '../components/TreeMenu.vue';
 import { ref } from 'vue';
 import { organization } from '../states/organization.js'
-import { getTaskTree, createTask, updateTaskName } from '../util/back_end_calls.js'
+import { getTaskTree, createTask, updateTaskName, removeAssigneeFromTask, addAssigneeToTask, getUserIdByName} from '../util/back_end_calls.js'
 import { loggedUser } from '../states/loggedUser.js'
-import { setSelectedTask } from '../states/task.js';
+import { setSelectedTask, selectedAssignees, updateAssignees} from '../states/task.js';
 import { selectedTask } from '../states/task.js';
 import UpdateButton from '../components/UpdateButton.vue';
 
@@ -51,11 +51,48 @@ async function createChildTask(taskName, taskFatherId) {
 async function deleteTask(){
   let organizationId = organization.current;
   let taskId = selectedTask.value.taskId;
-  
 }
 
-createChildTask("Test", 1)
+async function removeAssigneeFromTaskWrapper(userId) {
+  let organizationId = organization.current;
+  let taskId = selectedTask.value.taskId;
+  await removeAssigneeFromTask(organizationId, taskId, userId)
+  await setSelectedTask(selectedTask.value.taskId);
+}
 
+
+const showAddAssigneePopup = ref(false);
+const errorMessage = ref('');
+const userName = ref('');
+
+function addAssigneeToTaskWrapper(userName) {
+  getUserIdByName(userName).then((v) => {
+    if (v.statusCode === 404) {
+      errorMessage.value = "User not found";
+    } else {
+      addAssigneeToTask(organization.current,selectedTask.value.taskId,v.payload).then(() => {
+        setSelectedTask(selectedTask.value.taskId);
+        closeAddAssigneePopup();
+      });
+    }
+  });
+}
+
+function handleAddAssignee() {
+  const result = addAssigneeToTaskWrapper(userName.value);
+  if (result) {
+    closePopup();
+    updateUserList();
+  } else {
+    errorMessage.value = "User not found";
+  }
+}
+
+function closeAddAssigneePopup() {
+  showAddAssigneePopup.value = false;
+  userName.value = '';
+  errorMessage.value = '';
+}
 updateTaskTree()
 
 
@@ -72,6 +109,9 @@ updateTaskTree()
 
     <div v-if="organization.current != undefined" class=main_container>
       <div class="side_bar">
+        <button v-if="selectedTask.taskName!= undefined" @click="createChildTask('New Child Task', selectedTask.taskId)">Add child task </button>
+        <button @click="createChildTask('New Root Task', null)">Add root task </button>
+        <button v-if="selectedTask.taskName!= undefined" @click="">Delete selected task</button>
         <!-- <TreeMenu class="item" :model="treeData"></TreeMenu > -->
         <ul v-for="tree in treeData">
           <TreeMenu class="item" :model="tree"></TreeMenu>
@@ -79,9 +119,6 @@ updateTaskTree()
       </div>
       <div class="main_content">
 
-        <button v-if="selectedTask.taskName!= undefined" @click="createChildTask('New Child Task', selectedTask.taskId)">Add child task </button>
-        <button @click="createChildTask('New Root Task', null)">Add root task </button>
-        <button v-if="selectedTask.taskName!= undefined" @click="">Delete selected task</button>
         <br>
 
         <div v-if="selectedTask.taskName!= undefined">
@@ -90,6 +127,29 @@ updateTaskTree()
               :callbackAfterUpdate="updateTaskTree">
             </UpdateButton>
           </h1>
+
+          <div class="manage_task_assignees">
+
+            <div v-if="showAddAssigneePopup" class="popup">
+              <div class="popup-content">
+                <h2>Add User</h2>
+                <label for="user-name">User Name:</label>
+                <input id="user-name" v-model="userName" type="text" />
+                <button @click="handleAddAssignee">OK</button>
+                <button @click="closeAddAssigneePopup">Cancel</button>
+                <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+              </div>
+            </div>
+
+            
+            <h2>Assignees<button @click="showAddAssigneePopup=true">Add assignee </button></h2>
+            <ul class="assignee_list_container" >
+              <li class="assignee_list" v-for="assignee in selectedAssignees">
+                {{ assignee.name}}
+                <button @click="removeAssigneeFromTaskWrapper(assignee.id)">Remove</button>
+              </li>
+            </ul>
+          </div>
         </div>
 
       </div>
@@ -120,12 +180,86 @@ updateTaskTree()
   box-sizing: border-box
 }
 
-.main_content {
-  float: right;
-  width: 75%;
-  padding: 20px;
-  margin: 0px;
+
+
+
+h1 {
+  color: #333;
+  text-align: center;
+}
+
+button {
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+input, select {
+  background-color: #f5f5f5;
+  color: #333;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 10px 0;
+}
+
+.assignee_list_container {
+  list-style-type: none;
+  padding: 0;
+}
+
+.assignee_list {
+  background-color: #f9f9f9;
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.assignee_list button {
+  background-color: #dc3545;
+  font-size: 14px;
+}
+
+.assignee_list button:hover {
+  background-color: #c82333;
+}
+
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
   height: 100%;
-  box-sizing: border-box
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-content {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: center;
+  width: 300px;
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
 }
 </style>
