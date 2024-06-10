@@ -4,7 +4,7 @@ import { ref } from 'vue';
 const errorMessage = ref('');
 
 const handleGoogleSignIn = () => {
-  window.location.href = '/auth/google'; // Reindirizza l'utente a Google per l'autenticazione
+  window.location.href = '/MindMergeApp/auth/google';
 };
 </script>
 
@@ -53,4 +53,3 @@ const handleGoogleSignIn = () => {
   margin-right: 8px;
 }
 </style>
-
