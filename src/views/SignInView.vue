@@ -12,8 +12,8 @@ const handleGoogleSignIn = () => {
   <div class="sign-in-view">
     <h2>Sign In</h2>
     <button class="google-sign-in-button" @click="handleGoogleSignIn">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google icon" width="20" height="20" />
-      Sign In with Google
+      <img src="https://lh3.googleusercontent.com/COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA" alt="Google icon" class="google-icon" />
+      <span class="button-text">Sign In with Google</span>
     </button>
     <p v-if="errorMessage">{{ errorMessage }}</p>
   </div>
@@ -30,10 +30,10 @@ const handleGoogleSignIn = () => {
 }
 
 .google-sign-in-button {
-  background-color: #4285f4; /* Google blue */
-  color: white;
-  border: none;
-  padding: 12px 24px;
+  background-color: white; /* Background bianco */
+  color: #757575; /* Colore del testo grigio */
+  border: 1px solid #dcdcdc; /* Bordo grigio chiaro */
+  padding: 10px 24px;
   font-size: 16px;
   font-weight: bold;
   border-radius: 4px;
@@ -41,18 +41,26 @@ const handleGoogleSignIn = () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .google-sign-in-button:hover {
-  background-color: #357ae8;
+  background-color: #f1f1f1; /* Colore di sfondo al passaggio del mouse */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .google-sign-in-button:active {
-  background-color: #3367d6;
+  background-color: #e1e1e1; /* Colore di sfondo quando premuto */
 }
 
-.google-sign-in-button img {
+.google-icon {
   margin-right: 8px;
+  width: 20px;
+  height: 20px;
+}
+
+.button-text {
+  white-space: nowrap;
 }
 </style>
