@@ -136,15 +136,6 @@ export async function updateTaskName(organizationId, taskId, newName){
    return expectSuccess(response);
 }
 
-export async function updateTaskNotes(organizationId, taskId, notesId, newNotes){
-    let response = await fetch(HOST + '/api/v1/task/'+taskId+'/notes/'+notesId + "?organization_id=" + organizationId, {
-        method: "PUT",
-        body: newNotes
-    });
-    response = await response.json();
-    return expectSuccess(response);
-}
-
 
 export async function createTask(organizationId, taskName, assignee, manager, taskFatherId){
      
@@ -186,8 +177,36 @@ export async function deleteTask(organizationId, taskId){
     return expectSuccess(response);
 }
 
-export async function createNewNote(){
-    //let tasknote = new TaskNote.TaskNote{
+export async function createNote(organizationId, taskId){
+    let tasknote = new TaskNote.TaskNote(
+        1,
+        taskId,
+        "",
+        new Date()
+    )
+    let response = await fetch(HOST + '/api/v1/task/'+taskId+'/notes'+"?organization_id="+organizationId,
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(tasknote),
+        }
+    )
+    response = await response.json();
+    return expectSuccess(response);
+}
 
-    //}
+export async function updateTaskNotes(organizationId, taskId, notesId, newNotes){
+    let response = await fetch(HOST + '/api/v1/task/'+taskId+'/notes/'+notesId + "?organization_id=" + organizationId, {
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({notes: newNotes})
+    });
+
+    response = await response.json();
+    return expectSuccess(response);
+
 }
