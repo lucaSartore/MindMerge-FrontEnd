@@ -4,6 +4,7 @@ import { expectSuccess } from "./expect.js";
 import  organizationModule  from "../common_infrastructure_es6/organization.js" 
 import Task from '../common_infrastructure_es6/task.js'
 import TaskStatus from '../common_infrastructure_es6/task_status.js'
+import TaskNote from '../common_infrastructure_es6/task_note.js'
 const Organization = organizationModule.Organization
 
 /**
@@ -135,6 +136,15 @@ export async function updateTaskName(organizationId, taskId, newName){
    return expectSuccess(response);
 }
 
+export async function updateTaskNotes(organizationId, taskId, notesId, newNotes){
+    let response = await fetch(HOST + '/api/v1/task/'+taskId+'/notes/'+notesId + "?organization_id=" + organizationId, {
+        method: "PUT",
+        body: newNotes
+    });
+    response = await response.json();
+    return expectSuccess(response);
+}
+
 
 export async function createTask(organizationId, taskName, assignee, manager, taskFatherId){
      
@@ -174,4 +184,10 @@ export async function deleteTask(organizationId, taskId){
     });
     response = await response.json();
     return expectSuccess(response);
+}
+
+export async function createNewNote(){
+    //let tasknote = new TaskNote.TaskNote{
+
+    //}
 }

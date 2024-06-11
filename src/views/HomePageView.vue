@@ -2,7 +2,7 @@
 import TreeMenu from '../components/TreeMenu.vue';
 import { ref } from 'vue';
 import { organization } from '../states/organization.js'
-import { getTaskTree, createTask, updateTaskName } from '../util/back_end_calls.js'
+import { getTaskTree, createTask, updateTaskName, updateTaskNotes } from '../util/back_end_calls.js'
 import { loggedUser } from '../states/loggedUser.js'
 import { setSelectedTask } from '../states/task.js';
 import { selectedTask } from '../states/task.js';
@@ -41,7 +41,7 @@ async function updateTaskNameWrapper(newName) {
 }
 
 async function updateTaskNotesWrapper(newNotes) {
-  await updateTaskNotes(organization.current, selectedTask.value.taskId, newNotes)
+  await updateTaskNotes(organization.current, selectedTask.value.taskId, notesId, newNotes)
 }
 
 async function createChildTask(taskName, taskFatherId) {
@@ -57,6 +57,11 @@ async function deleteTask() {
   let taskId = selectedTask.value.taskId;
 
 }
+
+/*async function createNewNote(){
+  let organizationId = organization.current;
+  let taskId = selectedTask.value.taskId;
+};*/
 
 //debugging function to get the current task
 function getCurrentTask() {
@@ -107,8 +112,11 @@ updateTaskTree()
               </UpdateButton>
             </h1>
           </div>
-        </div>
+          <div v-else>
+            <button @click="createNewNote()">createNewNote</button>
+          </div>
 
+        </div>
       </div>
     </div>
 
