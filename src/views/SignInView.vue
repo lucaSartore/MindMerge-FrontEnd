@@ -4,7 +4,7 @@ import { ref } from 'vue';
 const errorMessage = ref('');
 
 const handleGoogleSignIn = () => {
-  window.location.href = '/auth/google'; // Reindirizza l'utente a Google per l'autenticazione
+  window.location.href = '/auth/google';
 };
 </script>
 
@@ -64,3 +64,6 @@ const handleGoogleSignIn = () => {
   white-space: nowrap;
 }
 </style>
+
+<!-- TODO: add sign_in_image.jpg above the botton
+TODO: implement the button functionality -->
