@@ -177,6 +177,14 @@ export async function deleteTask(organizationId, taskId){
     return expectSuccess(response);
 }
 
+export async function deleteTaskNotes(organizationId, taskId, noteId){
+    let response = await fetch(HOST + "/api/v1/task/"+taskId+"/notes/"+noteId+"?organization_id="+organizationId,{
+        method: "DELETE"
+    });
+    response = await response.json();
+    return expectSuccess(response);
+}
+
 export async function createNote(organizationId, taskId){
     let tasknote = new TaskNote.TaskNote(
         1,
