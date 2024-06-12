@@ -9,6 +9,7 @@ import { selectedTask } from '../states/task.js';
 import UpdateButton from '../components/UpdateButton.vue';
 
 var treeData = ref([{}]);
+var selectedNote = ref(1);   //This variable is used to keep track of the selected note in the dropdown
 
 async function updateTaskTree() {
   if (organization.current == undefined) {
@@ -33,6 +34,7 @@ async function updateTaskTree() {
     setSelectedTask(undefined);
   }
   treeData.value = value
+  console.log(selectedTask.value);
 }
 
 
@@ -41,7 +43,7 @@ async function updateTaskNameWrapper(newName) {
 }
 
 async function updateTaskNotesWrapper(newNotes) {
-  await updateTaskNotes(organization.current, selectedTask.value.taskId, 1, newNotes)
+  await updateTaskNotes(organization.current, selectedTask.value.taskId, selectedNote.value, newNotes)
 }
 
 async function createChildTask(taskName, taskFatherId) {
@@ -58,7 +60,7 @@ async function deleteTask() {
 
 }
 
-async function createNewNote(){
+async function createNewNote() {
   let organizationId = organization.current;
   let taskId = selectedTask.value.taskId;
   await createNote(organizationId, taskId);
@@ -98,6 +100,7 @@ updateTaskTree()
           @click="createChildTask('New Child Task', selectedTask.taskId)">Add child task </button>
         <button @click="createChildTask('New Root Task', null)">Add root task </button>
         <button v-if="selectedTask.taskName != undefined" @click="">Delete selected task</button>
+        <button @click="createNewNote()">createNewNote</button>
         <br>
 
         <div v-if="selectedTask.taskName != undefined">
@@ -107,17 +110,19 @@ updateTaskTree()
             </UpdateButton>
           </h1>
           <br>
-          <div v-if="selectedTask.taskNotes[0] != undefined">
-            <h1> Task Notes: {{ selectedTask.taskNotes[0].notes }}
-              <UpdateButton :text="selectedTask.taskNotes[0].notes" :updateFunction="updateTaskNotesWrapper"
-                :argsForUpdateFunction="null" :callbackAfterUpdate="updateTaskTree">
+          <select id="noteSelector" v-model="selectedNote">
+            <option v-for="note in selectedTask.taskNotes" :key="note.noteId" :value="note.noteId">
+              {{ note.noteId }}
+            </option>
+          </select>
+          <br>
+          <div v-if="selectedTask.taskNotes[selectedNote - 1] != undefined">
+            <h1> Task Notes: {{ selectedTask.taskNotes[selectedNote - 1].notes }}
+              <UpdateButton :text="selectedTask.taskNotes[selectedNote - 1].notes"
+                :updateFunction="updateTaskNotesWrapper" :argsForUpdateFunction="null">
               </UpdateButton>
             </h1>
           </div>
-          <div v-else>
-            <button @click="createNewNote()">createNewNote</button>
-          </div>
-
         </div>
       </div>
     </div>
