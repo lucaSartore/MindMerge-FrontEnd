@@ -27,9 +27,9 @@
 }
 
 .google-sign-in-button {
-  background-color: white; /* Background bianco */
-  color: #757575; /* Colore del testo grigio */
-  border: 1px solid #dcdcdc; /* Bordo grigio chiaro */
+  background-color: white;
+  color: #757575;
+  border: 1px solid #dcdcdc;
   padding: 10px 24px;
   font-size: 16px;
   font-weight: bold;
@@ -43,12 +43,12 @@
 }
 
 .google-sign-in-button:hover {
-  background-color: #f1f1f1; /* Colore di sfondo al passaggio del mouse */
+  background-color: #f1f1f1;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .google-sign-in-button:active {
-  background-color: #e1e1e1; /* Colore di sfondo quando premuto */
+  background-color: #e1e1e1;
 }
 
 .google-icon {
