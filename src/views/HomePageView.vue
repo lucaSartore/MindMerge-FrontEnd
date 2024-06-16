@@ -125,25 +125,24 @@ updateTaskTree()
 </script>
 
 <template>
-  <main>
+  <main class="main-container">
     <h1>Home Page</h1>
     <br>
 
     <div v-if="organization.current == undefined"> You need to select/create an organization from the page
       "organization" before you can see the details in this page</div>
 
-    <div v-if="organization.current != undefined">
-      <div class="side_bar">
+    <div v-if="organization.current != undefined" class="content-wrapper">
+      <div class="side-bar">
         <button v-if="selectedTask.taskName != undefined"
           @click="createChildTask('New Child Task', selectedTask.taskId)">Add child task </button>
         <button @click="createChildTask('New Root Task', null)">Add root task </button>
         <button v-if="selectedTask.taskName != undefined" @click="">Delete selected task</button>
-        <!-- <TreeMenu class="item" :model="treeData"></TreeMenu > -->
         <ul v-for="tree in treeData">
           <TreeMenu class="item" :model="tree"></TreeMenu>
         </ul>
       </div>
-      <div class="main_content">
+      <div class="main-content">
 
         <br>
 
@@ -154,10 +153,8 @@ updateTaskTree()
             </UpdateButton>
           </h1>
           <br>
-          <div class="manage task noted">
+          <div class="manage-task-notes">
             <h2>Task notes
-              <!--debugging button -->
-              <!-- <button @click="getCurrentTask()">get current task</button>-->
               <button @click="createNewNote()">create New Note</button>
               <button @click="deleteNote()">delete selected Note</button>
               <h3> Select note:
@@ -178,7 +175,7 @@ updateTaskTree()
               </h1>
             </div>
 
-            <div class="manage_task_assignees">
+            <div class="manage-task-assignees">
 
               <div v-if="showAddAssigneePopup" class="popup">
                 <div class="popup-content">
@@ -193,8 +190,8 @@ updateTaskTree()
 
 
               <h2>Assignees <button @click="showAddAssigneePopup = true">Add assignee </button></h2>
-              <ul class="assignee_list_container">
-                <li class="assignee_list" v-for="assignee in selectedAssignees">
+              <ul class="assignee-list-container">
+                <li class="assignee-list" v-for="assignee in selectedAssignees">
                   {{ assignee.name }}
                   <button @click="removeAssigneeFromTaskWrapper(assignee.id)">Remove</button>
                 </li>
@@ -208,30 +205,38 @@ updateTaskTree()
   </main>
 </template>
 
-
 <style scoped>
-.main_container {
-  overflow: auto;
-  height: 100%;
-  padding: 0%;
-  margin: 0%;
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-.side_bar {
-  border-color: black;
-  border-radius: 5%;
-  border-width: 4px;
-  border-style: solid;
-  float: left;
+.content-wrapper {
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 20px;
+}
+
+.side-bar {
+  border-right: 1px solid #ddd;
   width: 25%;
   padding: 20px;
-  margin: 0px;
-  height: 100%;
-  box-sizing: border-box
+  box-sizing: border-box;
+  background-color: #f8f9fa;
 }
 
-
-
+.main-content {
+  flex: 1;
+  padding: 20px;
+  box-sizing: border-box;
+}
 
 h1 {
   color: #333;
@@ -265,12 +270,12 @@ select {
   margin: 10px 0;
 }
 
-.assignee_list_container {
+.assignee-list-container {
   list-style-type: none;
   padding: 0;
 }
 
-.assignee_list {
+.assignee-list {
   background-color: #f9f9f9;
   padding: 10px;
   margin: 5px 0;
@@ -280,12 +285,12 @@ select {
   align-items: center;
 }
 
-.assignee_list button {
+.assignee-list button {
   background-color: #dc3545;
   font-size: 14px;
 }
 
-.assignee_list button:hover {
+.assignee-list button:hover {
   background-color: #c82333;
 }
 
