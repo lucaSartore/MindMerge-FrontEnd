@@ -5,8 +5,8 @@ import {expectSuccess} from '../util/expect.js'
 const loggedUser = reactive({
     // token: undefined,
     // id: undefined,
-    // token: "token",
-    // id: 1,
+    token: "token",
+    id: 1,
 })
 
 function isUserLoggedIn () {

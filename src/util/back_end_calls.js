@@ -1,4 +1,3 @@
-
 const HOST = import.meta.env.VITE_HOST || 'http://localhost:9000';
 import { expectSuccess } from "./expect.js";
 import  organizationModule  from "../common_infrastructure_es6/organization.js" 
@@ -179,6 +178,20 @@ export async function deleteTask(organizationId, taskId){
 
 export async function deleteTaskNotes(organizationId, taskId, noteId){
     let response = await fetch(HOST + "/api/v1/task/"+taskId+"/notes/"+noteId+"?organization_id="+organizationId,{
+        method: "DELETE"
+    });
+    response = await response.json();
+    return await response.json();
+}
+export async function addAssigneeToTask(organizationId, taskId, assigneeId){
+    let response = await fetch(HOST + "/api/v1/task/"+taskId+"/assignee/"+assigneeId+"?organization_id="+organizationId,{
+        method: "POST"
+    });
+    return await response.json();
+}
+
+export async function removeAssigneeFromTask(organizationId, taskId, assigneeId){
+    let response = await fetch(HOST + "/api/v1/task/"+taskId+"/assignee/"+assigneeId+"?organization_id="+organizationId,{
         method: "DELETE"
     });
     response = await response.json();
