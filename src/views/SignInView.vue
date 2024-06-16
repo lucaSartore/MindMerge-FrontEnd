@@ -1,6 +1,6 @@
 <template>
   <div class="sign-in-view">
-    <img id="logo" src="../../public/sign_in_image.png">
+    <img id="logo" src="../../public/sign_in.png">
     <h2>Sign In</h2>
     <button class="google-sign-in-button" @click="handleGoogleSignIn">
       <img src="https://lh3.googleusercontent.com/COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA" alt="Google icon" class="google-icon" />
