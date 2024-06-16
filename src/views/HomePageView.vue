@@ -54,6 +54,12 @@ async function deleteTask(){
   
 }
 
+async function editTaskDescription(){
+  let organizationId = organization.current;
+  let taskId = selectedTask.value.taskId;
+  await updateTaskDescription(organizationId, taskId, newDescription)
+}
+
 createChildTask("Test", 1)
 
 updateTaskTree()
@@ -91,7 +97,14 @@ updateTaskTree()
             </UpdateButton>
           </h1>
         </div>
-
+        
+        <div v-if="selectedTask.taskName!= undefined">
+          <h1> Task Description: {{ selectedTask.taskDescription }}
+            <UpdateButton :text="selectedTask.taskDescription" :updateFunction="editTaskDescription" :argsForUpdateFunction="null"
+              :callbackAfterUpdate="updateTaskTree">
+            </UpdateButton>
+          </h1>
+        </div>
       </div>
     </div>
 
