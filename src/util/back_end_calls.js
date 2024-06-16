@@ -180,7 +180,6 @@ export async function deleteTaskNotes(organizationId, taskId, noteId){
     let response = await fetch(HOST + "/api/v1/task/"+taskId+"/notes/"+noteId+"?organization_id="+organizationId,{
         method: "DELETE"
     });
-    response = await response.json();
     return await response.json();
 }
 export async function addAssigneeToTask(organizationId, taskId, assigneeId){
