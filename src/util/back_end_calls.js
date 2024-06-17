@@ -230,3 +230,11 @@ export async function updateTaskNotes(organizationId, taskId, notesId, newNotes)
     return expectSuccess(response);
 
 }
+
+export async function updateTaskStatus(organizationId, taskId, newStatus){
+    let response = await fetch(HOST + '/api/v1/task/'+taskId+'/status/'+newStatus + "?organization_id=" + organizationId, {
+        method: "PUT"
+    });
+    response = await response.json();
+    return expectSuccess(response);
+}

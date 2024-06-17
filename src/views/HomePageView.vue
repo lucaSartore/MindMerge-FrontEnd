@@ -2,7 +2,7 @@
 import TreeMenu from '../components/TreeMenu.vue';
 import { ref } from 'vue';
 import { organization } from '../states/organization.js'
-import { getTaskTree, createTask, updateTaskName, createNote, updateTaskNotes, deleteTaskNotes, removeAssigneeFromTask, addAssigneeToTask, getUserIdByName } from '../util/back_end_calls.js'
+import { getTaskTree, createTask, updateTaskName, createNote, updateTaskNotes, deleteTaskNotes, removeAssigneeFromTask, addAssigneeToTask, getUserIdByName, updateTaskStatus } from '../util/back_end_calls.js'
 import { loggedUser } from '../states/loggedUser.js'
 import { setSelectedTask, selectedAssignees, updateAssignees } from '../states/task.js';
 import { selectedTask } from '../states/task.js';
@@ -45,6 +45,11 @@ async function updateTaskNameWrapper(newName) {
 
 async function updateTaskNotesWrapper(newNotes) {
   await updateTaskNotes(organization.current, selectedTask.value.taskId, selectedNote.value, newNotes)
+}
+
+async function changeStatusWrapper() {
+  await updateTaskStatus(organization.current, selectedTask.value.taskId, selectedTask.value.taskStatus);
+  await updateTaskTree();
 }
 
 async function createChildTask(taskName, taskFatherId) {
@@ -155,7 +160,7 @@ updateTaskTree()
           </h1>
           <br>
           <h3> Task Status:
-            <select id="statusSelector" v-model="selectedTask.taskStatus" style="width: 200px;">
+            <select id="statusSelector" v-model="selectedTask.taskStatus" style="width: 200px;" @change="changeStatusWrapper()">
               <option v-for="status in 6" :key="status" :value="status">
                 {{ Object.keys(TaskStatus.TaskStatus)[status] }}
               </option>
