@@ -7,6 +7,7 @@ import { loggedUser } from '../states/loggedUser.js'
 import { setSelectedTask, selectedAssignees, updateAssignees } from '../states/task.js';
 import { selectedTask } from '../states/task.js';
 import UpdateButton from '../components/UpdateButton.vue';
+import TaskStatus from '../common_infrastructure_es6/task_status.js';
 
 var treeData = ref([{}]);
 var selectedNote = ref(null);   //This variable is used to keep track of the selected note in the dropdown
@@ -152,6 +153,14 @@ updateTaskTree()
               :argsForUpdateFunction="null" :callbackAfterUpdate="updateTaskTree">
             </UpdateButton>
           </h1>
+          <br>
+          <h3> Task Status:
+            <select id="statusSelector" v-model="selectedTask.taskStatus" style="width: 200px;">
+              <option v-for="status in 6" :key="status" :value="status">
+                {{ Object.keys(TaskStatus.TaskStatus)[status] }}
+              </option>
+            </select>
+          </h3>
           <br>
           <div class="manage-task-notes">
             <h2>Task notes
