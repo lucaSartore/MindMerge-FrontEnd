@@ -2,7 +2,7 @@
 import TreeMenu from '../components/TreeMenu.vue';
 import { ref } from 'vue';
 import { organization } from '../states/organization.js'
-import { getTaskTree, createTask, updateTaskName, createNote, updateTaskNotes, deleteTaskNotes, removeAssigneeFromTask, addAssigneeToTask, getUserIdByName } from '../util/back_end_calls.js'
+import { getTaskTree, createTask, updateTaskName, createNote, updateTaskNotes, deleteTaskNotes, removeAssigneeFromTask, addAssigneeToTask, getUserIdByName, deleteTask } from '../util/back_end_calls.js'
 import { loggedUser } from '../states/loggedUser.js'
 import { setSelectedTask, selectedAssignees, updateAssignees } from '../states/task.js';
 import { selectedTask } from '../states/task.js';
@@ -34,7 +34,6 @@ async function updateTaskTree() {
     setSelectedTask(undefined);
   }
   treeData.value = value
-  console.log(selectedTask.value);
 }
 
 
@@ -54,9 +53,11 @@ async function createChildTask(taskName, taskFatherId) {
   await updateTaskTree();
 }
 
-async function deleteTask() {
+async function deleteTaskWrapper() {
   let organizationId = organization.current;
   let taskId = selectedTask.value.taskId;
+  await deleteTask(organizationId, taskId);
+  await updateTaskTree();
 }
 
 async function deleteNote() {
@@ -137,7 +138,7 @@ updateTaskTree()
         <button v-if="selectedTask.taskName != undefined"
           @click="createChildTask('New Child Task', selectedTask.taskId)">Add child task </button>
         <button @click="createChildTask('New Root Task', null)">Add root task </button>
-        <button v-if="selectedTask.taskName != undefined" @click="">Delete selected task</button>
+        <button v-if="selectedTask.taskName != undefined" @click="deleteTaskWrapper">Delete selected task</button>
         <ul v-for="tree in treeData">
           <TreeMenu class="item" :model="tree"></TreeMenu>
         </ul>

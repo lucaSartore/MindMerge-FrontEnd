@@ -6,7 +6,7 @@ export const selectedAssignees = ref([]);
 export const selectedManager = ref({});
 
 export async function updateAssignees(){
-    if (selectedTask.value == undefined){
+    if (selectedTask.value == undefined || selectedTask.value.taskAssignees == undefined){
         assignees.value = [];
         return;
     }
@@ -24,7 +24,7 @@ export async function updateAssignees(){
  */
 export async function setSelectedTask(taskId) {
     if (taskId == undefined || organization.current == undefined) {
-        selectedTask.value = undefined;
+        selectedTask.value = {};
         return;
     }
     selectedTask.value = await getTask(taskId, organization.current);
