@@ -46,5 +46,5 @@ export async function updateOrganization(currentOrganizationIndex) {
 }
 
 if (organization.initialized == false){
-    await updateOrganization()
+    updateOrganization()
 }
