@@ -182,6 +182,13 @@ export async function deleteTaskNotes(organizationId, taskId, noteId){
     });
     return await response.json();
 }
+
+export async function getTaskAutomaticReport(organizationId, taskId, userId){
+    let response = await fetch(HOST + "/api/v1/report/automatic/?organization_id="+organizationId+"&user_id="+userId+"&task_id="+taskId);
+    response = await response.json();
+    return expectSuccess(response);
+}    
+
 export async function addAssigneeToTask(organizationId, taskId, assigneeId){
     let response = await fetch(HOST + "/api/v1/task/"+taskId+"/assignee/"+assigneeId+"?organization_id="+organizationId,{
         method: "POST"
