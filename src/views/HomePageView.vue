@@ -92,7 +92,8 @@ async function getAutomaticReport() {
   let taskId = selectedTask.value.taskId;
   let userId = loggedUser.id;
   await getTaskAutomaticReport(organizationId, taskId, userId);
-  console.log(data);
+  closeAutomaticReportPopup();
+  alert("You will recieve an email soon");
 }
 
 async function removeAssigneeFromTaskWrapper(userId) {
@@ -104,8 +105,10 @@ async function removeAssigneeFromTaskWrapper(userId) {
 
 
 const showAddAssigneePopup = ref(false);
+const showAutomaticReportPopup = ref(false);
 const errorMessage = ref('');
 const userName = ref('');
+const automaticReportQuestion = ref('');
 
 async function addAssigneeToTaskWrapper(userName) {
   let v = await getUserIdByName(userName)
@@ -133,6 +136,11 @@ function closeAddAssigneePopup() {
   showAddAssigneePopup.value = false;
   userName.value = '';
   errorMessage.value = '';
+}
+
+function closeAutomaticReportPopup() {
+  showAutomaticReportPopup.value = false;
+  automaticReportQuestion.value = '';
 }
 
 updateTaskTree()
@@ -177,7 +185,7 @@ updateTaskTree()
                 </option>
               </select>
             </h3>
-            <button @click="getAutomaticReport()">Get automatic Report</button>
+            <button @click="showAutomaticReportPopup = true">Get automatic Report</button>
           </div>
           <br>
           <div class="manage-task-notes">
@@ -219,6 +227,16 @@ updateTaskTree()
                   <button @click="handleAddAssignee">OK</button>
                   <button @click="closeAddAssigneePopup">Cancel</button>
                   <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+                </div>
+              </div>
+
+              <div v-if="showAutomaticReportPopup" class="popup">
+                <div class="popup-content">
+                  <h2>Automatic Report</h2>
+                  <label for="question">Question about the task</label>
+                  <input id="question" v-model="automaticReportQuestion" type="text" />
+                  <button @click="getAutomaticReport">OK</button>
+                  <button @click="closeAutomaticReportPopup">Cancel</button>
                 </div>
               </div>
 
