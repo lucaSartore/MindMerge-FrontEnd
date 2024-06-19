@@ -8,6 +8,7 @@
 function expectSuccess(response) {
     if (response.statusCode !== 200) {
         console.error(response.message);
+        return null;
     }
     return response.payload;
 }

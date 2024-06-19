@@ -6,7 +6,7 @@ const loggedUser = reactive({
     token: undefined,
     id: undefined,
     // token: "token",
-    // id: 3,
+    // id: 1,
 })
 
 function isUserLoggedIn () {
