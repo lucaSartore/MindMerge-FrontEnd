@@ -5,6 +5,7 @@ import Task from '../common_infrastructure_es6/task.js'
 import TaskStatus from '../common_infrastructure_es6/task_status.js'
 import TaskNote from '../common_infrastructure_es6/task_note.js'
 const Organization = organizationModule.Organization
+import { loggedUser } from '../states/loggedUser.js'
 
 /**
  * Get the URL to redirect to for Google OAuth
