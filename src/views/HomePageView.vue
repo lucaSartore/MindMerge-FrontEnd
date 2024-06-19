@@ -91,7 +91,7 @@ async function getAutomaticReport() {
   let organizationId = organization.current;
   let taskId = selectedTask.value.taskId;
   let userId = loggedUser.id;
-  await getTaskAutomaticReport(organizationId, taskId, userId);
+  await getTaskAutomaticReport(organizationId, taskId, userId, automaticReportQuestion.value);
   closeAutomaticReportPopup();
   alert("You will recieve an email soon");
 }
