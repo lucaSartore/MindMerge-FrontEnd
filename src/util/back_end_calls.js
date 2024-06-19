@@ -184,7 +184,9 @@ export async function deleteTaskNotes(organizationId, taskId, noteId){
 }
 
 export async function getTaskAutomaticReport(organizationId, taskId, userId){
-    let response = await fetch(HOST + "/api/v1/report/automatic/?organization_id="+organizationId+"&user_id="+userId+"&task_id="+taskId);
+    let response = await fetch(HOST + "/api/v1/report/automatic/?organization_id="+organizationId+"&user_id="+userId+"&task_id="+taskId,{
+        method: "POST"
+    });
     response = await response.json();
     return expectSuccess(response);
 }    
