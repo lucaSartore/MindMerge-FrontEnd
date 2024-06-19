@@ -2,7 +2,7 @@
 import TreeMenu from '../components/TreeMenu.vue';
 import { ref } from 'vue';
 import { organization } from '../states/organization.js'
-import { getTaskTree, createTask, updateTaskName, createNote, updateTaskNotes, deleteTaskNotes, removeAssigneeFromTask, addAssigneeToTask, getUserIdByName, deleteTask , updateTaskStatus } from '../util/back_end_calls.js'
+import { getTaskTree, createTask, updateTaskName, createNote, updateTaskNotes, deleteTaskNotes, removeAssigneeFromTask, addAssigneeToTask, getUserIdByName, deleteTask, updateTaskStatus } from '../util/back_end_calls.js'
 import { loggedUser } from '../states/loggedUser.js'
 import { setSelectedTask, selectedAssignees, updateAssignees } from '../states/task.js';
 import { selectedTask } from '../states/task.js';
@@ -99,26 +99,25 @@ const showAddAssigneePopup = ref(false);
 const errorMessage = ref('');
 const userName = ref('');
 
-function addAssigneeToTaskWrapper(userName) {
-  getUserIdByName(userName).then((v) => {
-    if (v.statusCode === 404) {
-      errorMessage.value = "User not found";
-    } else {
-      addAssigneeToTask(organization.current, selectedTask.value.taskId, v.payload).then(() => {
-        setSelectedTask(selectedTask.value.taskId);
-        closeAddAssigneePopup();
-      });
-    }
-  });
+async function addAssigneeToTaskWrapper(userName) {
+  let v = await getUserIdByName(userName)
+  if (v.statusCode === 404) {
+    errorMessage.value = "User not found";
+    return false
+  }
+  v = await addAssigneeToTask(organization.current, selectedTask.value.taskId, v.payload)
+  if (v.statusCode === 404) {
+    errorMessage.value = "User not found in organization";
+    return false
+  }
+  return true
 }
 
-function handleAddAssignee() {
-  const result = addAssigneeToTaskWrapper(userName.value);
+async function handleAddAssignee() {
+  const result = await addAssigneeToTaskWrapper(userName.value);
   if (result) {
-    closePopup();
-    updateUserList();
-  } else {
-    errorMessage.value = "User not found";
+    closeAddAssigneePopup();
+    setSelectedTask(selectedTask.value.taskId);
   }
 }
 
@@ -161,7 +160,8 @@ updateTaskTree()
           </h1>
           <br>
           <h3> Task Status:
-            <select id="statusSelector" v-model="selectedTask.taskStatus" style="width: 200px;" @change="changeStatusWrapper()">
+            <select id="statusSelector" v-model="selectedTask.taskStatus" style="width: 200px;"
+              @change="changeStatusWrapper()">
               <option v-for="status in 6" :key="status" :value="status">
                 {{ Object.keys(TaskStatus.TaskStatus)[status] }}
               </option>
@@ -182,12 +182,19 @@ updateTaskTree()
             </h2>
             <br>
             <div v-if="selectedTask.taskNotes[selectedNote - 1] != undefined">
-              <h1> Task Notes: {{ selectedTask.taskNotes[selectedNote - 1].notes }}
-                <UpdateButton :text="selectedTask.taskNotes[selectedNote - 1].notes"
-                  :updateFunction="updateTaskNotesWrapper" :argsForUpdateFunction="null"
-                  :callbackAfterUpdate="updateTaskTree">
-                </UpdateButton>
-              </h1>
+              <div v-if="selectedTask.taskNotes[selectedNote - 1] != undefined">
+                <div class="task-note-container">
+                  <p class="task-notes-label">Note {{ selectedNote }}
+                    <UpdateButton :text="selectedTask.taskNotes[selectedNote - 1].notes"
+                      :updateFunction="updateTaskNotesWrapper" :argsForUpdateFunction="null"
+                      :callbackAfterUpdate="updateTaskTree">
+                    </UpdateButton>
+                  </p>
+                  <p class="task-notes-text">{{ selectedTask.taskNotes[selectedNote - 1].notes }}</p>
+
+                  <p class="last-updated">Last updated: {{ selectedTask.taskNotes[selectedNote - 1].date }}</p>
+                </div>
+              </div>
             </div>
 
             <div class="manage-task-assignees">
@@ -331,6 +338,37 @@ select {
 
 .error {
   color: red;
+  margin-top: 10px;
+}
+
+
+.task-note-container {
+  background-color: #f9f9f9;
+  /* Light grey background */
+  border: 1px solid #ddd;
+  /* Light grey border */
+  padding: 15px;
+  margin-top: 20px;
+  border-radius: 5px;
+  text-align: left;
+}
+
+.task-notes-label {
+  font-weight: bold;
+  font-size: larger;
+  margin: 0;
+}
+
+.task-notes-text {
+  font-weight: normal;
+  font-size: smaller;
+  margin: 0;
+  margin-top: 5px;
+}
+
+.last-updated {
+  font-size: smaller;
+  color: gray;
   margin-top: 10px;
 }
 </style>
