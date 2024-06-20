@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { getTask, getUser } from '../util/back_end_calls.js';
+import { getTask, getUserName } from '../util/back_end_calls.js';
 import { organization } from './organization.js';
 export const selectedTask  = ref({});
 export const selectedAssignees = ref([]);
@@ -11,7 +11,7 @@ export async function updateAssignees(){
         return;
     }
   let newAssignees = selectedTask.value.taskAssignees.map( async (assignee) => {
-    let name = (await getUser(assignee)).userName;
+    let name = await getUserName(assignee);
     return {id: assignee, name: name}
   });
   newAssignees = await Promise.all(newAssignees);
