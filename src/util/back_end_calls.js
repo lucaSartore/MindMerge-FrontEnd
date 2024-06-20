@@ -1,6 +1,6 @@
 const HOST = import.meta.env.VITE_HOST || 'http://localhost:9000';
 import { expectSuccess } from "./expect.js";
-import  organizationModule  from "../common_infrastructure_es6/organization.js" 
+import organizationModule from "../common_infrastructure_es6/organization.js"
 import Task from '../common_infrastructure_es6/task.js'
 import TaskStatus from '../common_infrastructure_es6/task_status.js'
 import TaskNote from '../common_infrastructure_es6/task_note.js'
@@ -110,8 +110,8 @@ export async function deleteUserFromOrganization(organizationId, userToDeleteId)
     return expectSuccess(response);
 }
 
-export async function createOrganization(organizationName, ownerId){
-    
+export async function createOrganization(organizationName, ownerId) {
+
     let organization = new Organization(0, organizationName, [ownerId], false, new Date(), ownerId);
     organization = JSON.stringify(organization);
 
@@ -151,8 +151,8 @@ export async function updateTaskName(organizationId, taskId, newName){
 }
 
 
-export async function createTask(organizationId, taskName, assignee, manager, taskFatherId){
-     
+export async function createTask(organizationId, taskName, assignee, manager, taskFatherId) {
+
     let task = new Task.Task(
         1,
         taskFatherId,
@@ -198,8 +198,21 @@ export async function deleteTaskNotes(organizationId, taskId, noteId){
     // return await response.json();
     return expectSuccess(response);
 }
-export async function addAssigneeToTask(organizationId, taskId, assigneeId){
-    let response = await fetchWrapper(HOST + "/api/v1/task/"+taskId+"/assignee/"+assigneeId+"?organization_id="+organizationId,{
+
+export async function getTaskAutomaticReport(organizationId, taskId, userId, question) {
+    let response = await fetchWrapper(HOST + "/api/v1/report/automatic/?organization_id=" + organizationId + "&user_id=" + userId + "&task_id=" + taskId, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ prompt: question })
+    });
+    response = await response.json();
+    return expectSuccess(response);
+}
+
+export async function addAssigneeToTask(organizationId, taskId, assigneeId) {
+    let response = await fetchWrapper(HOST + "/api/v1/task/" + taskId + "/assignee/" + assigneeId + "?organization_id=" + organizationId, {
         method: "POST"
     });
     return await response.json();
@@ -213,7 +226,7 @@ export async function removeAssigneeFromTask(organizationId, taskId, assigneeId)
     return expectSuccess(response);
 }
 
-export async function createNote(organizationId, taskId){
+export async function createNote(organizationId, taskId) {
     let tasknote = new TaskNote.TaskNote(
         1,
         taskId,
@@ -239,7 +252,7 @@ export async function updateTaskNotes(organizationId, taskId, notesId, newNotes)
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({notes: newNotes})
+        body: JSON.stringify({ notes: newNotes })
     });
 
     response = await response.json();
