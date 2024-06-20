@@ -104,10 +104,9 @@ export async function addUserToOrganization(organizationId, userToAddId){
 export async function deleteUserFromOrganization(organizationId, userToDeleteId){
     let response = await fetchWrapper(HOST + '/api/v1/organization/' + organizationId + '/user/' + userToDeleteId,
         {
-            method: 'DELETE',
-        }
+            method: 'DELETE', }
     )
-    response = await response.json();
+    // response = await response.json();
     return expectSuccess(response);
 }
 
@@ -188,7 +187,7 @@ export async function deleteTask(organizationId, taskId){
     let response = await fetchWrapper(HOST + "/api/v1/task/"+taskId+"?organization_id="+organizationId,{
         method: "DELETE"
     });
-    response = await response.json();
+    // response = await response.json();
     return expectSuccess(response);
 }
 
@@ -196,7 +195,8 @@ export async function deleteTaskNotes(organizationId, taskId, noteId){
     let response = await fetchWrapper(HOST + "/api/v1/task/"+taskId+"/notes/"+noteId+"?organization_id="+organizationId,{
         method: "DELETE"
     });
-    return await response.json();
+    // return await response.json();
+    return expectSuccess(response);
 }
 export async function addAssigneeToTask(organizationId, taskId, assigneeId){
     let response = await fetchWrapper(HOST + "/api/v1/task/"+taskId+"/assignee/"+assigneeId+"?organization_id="+organizationId,{
@@ -209,7 +209,7 @@ export async function removeAssigneeFromTask(organizationId, taskId, assigneeId)
     let response = await fetchWrapper(HOST + "/api/v1/task/"+taskId+"/assignee/"+assigneeId+"?organization_id="+organizationId,{
         method: "DELETE"
     });
-    response = await response.json();
+    // response = await response.json();
     return expectSuccess(response);
 }
 
