@@ -1,3 +1,13 @@
+<script setup>
+  import {getGoogleRedirectUrl} from "../util/back_end_calls.js";
+  
+  async function handleGoogleSignIn() {
+    console.log("Redirecting to Google login page");
+    const redirectUrl = await getGoogleRedirectUrl();
+    window.location.href = redirectUrl;
+  }
+</script>
+
 <template>
   <div class="sign-in-view">
     <img id="logo" src="../../public/sign_in.png">
