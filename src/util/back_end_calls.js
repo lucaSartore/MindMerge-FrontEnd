@@ -46,12 +46,14 @@ export async function createGoogleUser(token){
  * @param {string} userToken
  * @returns {User}
  */ 
-export async function getUser(userId, userToken) {
-    let response = await fetchWrapper(HOST + '/api/v1/user/' + userId, {
-        headers: {
-            userToken: userToken
-        }
-    });
+export async function getUser(userId) {
+    let response = await fetchWrapper(HOST + '/api/v1/user/' + userId);
+    response = await response.json();
+    return expectSuccess(response);
+}
+
+export async function getUserName(userId){
+    let response = await fetchWrapper(HOST + '/api/v1/user/' + userId + '/name');
     response = await response.json();
     return expectSuccess(response);
 }
