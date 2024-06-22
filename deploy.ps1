@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 npm run build
 
 cp 404.html dist/404.html
