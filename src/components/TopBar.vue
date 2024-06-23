@@ -15,10 +15,10 @@ import { isUserLoggedIn} from '../states/loggedUser';
       </nav>
       <nav v-if = "isUserLoggedIn()">
         <RouterLink to="/home">Home</RouterLink>
-        <RouterLink to="/reports">Reports</RouterLink>
+        <!-- <RouterLink to="/reports">Reports</RouterLink> -->
         <RouterLink to="/organization">Organizations</RouterLink>
-        <RouterLink to="/account">Account</RouterLink>
-        <RouterLink to="/notifications">Notifications</RouterLink>
+        <!-- <RouterLink to="/account">Account</RouterLink> -->
+        <!-- <RouterLink to="/notifications">Notifications</RouterLink> -->
       </nav>
   </div>
 </template>

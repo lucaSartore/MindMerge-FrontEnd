@@ -6,11 +6,12 @@
  * @returns {T}
  */
 function expectSuccess(response) {
-    if (response.statusCode !== 200) {
-        console.error(response.message);
-        return null;
+    let code = response.statusCode || response.status;
+    if (code>= 200 && code < 300) {
+        return response.payload;
     }
-    return response.payload;
+    console.error(response.message);
+    return null;
 }
 
 

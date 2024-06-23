@@ -92,7 +92,6 @@ const router = createRouter({
       beforeEnter: async function(to, from, next) {
         let response = to.query.response;
         response = JSON.parse(response);
-        console.log(response);
         setLoggedUser(response);
         await updateOrganization();
         next({ name: 'home' })

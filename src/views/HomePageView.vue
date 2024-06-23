@@ -2,7 +2,7 @@
 import TreeMenu from '../components/TreeMenu.vue';
 import { ref } from 'vue';
 import { organization } from '../states/organization.js'
-import { getTaskTree, createTask, updateTaskName, createNote, updateTaskNotes, deleteTaskNotes, removeAssigneeFromTask, addAssigneeToTask, getUserIdByName, deleteTask, updateTaskStatus } from '../util/back_end_calls.js'
+import { getTaskTree, createTask, updateTaskName, createNote, updateTaskNotes, deleteTaskNotes, removeAssigneeFromTask, addAssigneeToTask, getUserIdByName, deleteTask, updateTaskStatus, getTaskAutomaticReport } from '../util/back_end_calls.js'
 import { loggedUser } from '../states/loggedUser.js'
 import { setSelectedTask, selectedAssignees, updateAssignees } from '../states/task.js';
 import { selectedTask } from '../states/task.js';
@@ -87,6 +87,15 @@ function getCurrentTask() {
   console.log(selectedTask.value);
 }
 
+async function getAutomaticReport() {
+  let organizationId = organization.current;
+  let taskId = selectedTask.value.taskId;
+  let userId = loggedUser.id;
+  await getTaskAutomaticReport(organizationId, taskId, userId, automaticReportQuestion.value);
+  closeAutomaticReportPopup();
+  alert("You will recieve an email soon");
+}
+
 async function removeAssigneeFromTaskWrapper(userId) {
   let organizationId = organization.current;
   let taskId = selectedTask.value.taskId;
@@ -96,8 +105,10 @@ async function removeAssigneeFromTaskWrapper(userId) {
 
 
 const showAddAssigneePopup = ref(false);
+const showAutomaticReportPopup = ref(false);
 const errorMessage = ref('');
 const userName = ref('');
+const automaticReportQuestion = ref('');
 
 async function addAssigneeToTaskWrapper(userName) {
   let v = await getUserIdByName(userName)
@@ -126,6 +137,12 @@ function closeAddAssigneePopup() {
   userName.value = '';
   errorMessage.value = '';
 }
+
+function closeAutomaticReportPopup() {
+  showAutomaticReportPopup.value = false;
+  automaticReportQuestion.value = '';
+}
+
 updateTaskTree()
 
 </script>
@@ -159,14 +176,17 @@ updateTaskTree()
             </UpdateButton>
           </h1>
           <br>
-          <h3> Task Status:
-            <select id="statusSelector" v-model="selectedTask.taskStatus" style="width: 200px;"
-              @change="changeStatusWrapper()">
-              <option v-for="status in 6" :key="status" :value="status">
-                {{ Object.keys(TaskStatus.TaskStatus)[status] }}
-              </option>
-            </select>
-          </h3>
+          <div class="task-status-container">
+            <h3> Task Status:
+              <select id="statusSelector" v-model="selectedTask.taskStatus" style="width: 200px;"
+                @change="changeStatusWrapper()">
+                <option v-for="status in 6" :key="status" :value="status">
+                  {{ Object.keys(TaskStatus.TaskStatus)[status] }}
+                </option>
+              </select>
+            </h3>
+            <button @click="showAutomaticReportPopup = true">Get automatic Report</button>
+          </div>
           <br>
           <div class="manage-task-notes">
             <h2>Task notes
@@ -207,6 +227,16 @@ updateTaskTree()
                   <button @click="handleAddAssignee">OK</button>
                   <button @click="closeAddAssigneePopup">Cancel</button>
                   <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+                </div>
+              </div>
+
+              <div v-if="showAutomaticReportPopup" class="popup">
+                <div class="popup-content">
+                  <h2>Automatic Report</h2>
+                  <label for="question">Question about the task</label>
+                  <input id="question" v-model="automaticReportQuestion" type="text" />
+                  <button @click="getAutomaticReport">OK</button>
+                  <button @click="closeAutomaticReportPopup">Cancel</button>
                 </div>
               </div>
 
@@ -341,12 +371,9 @@ select {
   margin-top: 10px;
 }
 
-
 .task-note-container {
   background-color: #f9f9f9;
-  /* Light grey background */
   border: 1px solid #ddd;
-  /* Light grey border */
   padding: 15px;
   margin-top: 20px;
   border-radius: 5px;
@@ -370,5 +397,22 @@ select {
   font-size: smaller;
   color: gray;
   margin-top: 10px;
+}
+
+.task-status-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.task-status-container h3 {
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.task-status-container button {
+  margin-left: auto;
 }
 </style>
