@@ -93,7 +93,7 @@ async function getAutomaticReport() {
   let userId = loggedUser.id;
   await getTaskAutomaticReport(organizationId, taskId, userId, automaticReportQuestion.value);
   closeAutomaticReportPopup();
-  alert("You will recieve an email soon");
+  alert("You will receive an email soon");
 }
 
 async function removeAssigneeFromTaskWrapper(userId) {
