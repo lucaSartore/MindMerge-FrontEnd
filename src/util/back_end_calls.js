@@ -267,3 +267,15 @@ export async function updateTaskStatus(organizationId, taskId, newStatus){
     response = await response.json();
     return expectSuccess(response);
 }
+
+export async function updateTaskDescription(organizationId, taskId, newDescription){
+    let response = await fetch(HOST + '/api/v1/task/'+taskId+'/description/'+newDescription + "?organization_id=" + organizationId, {
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({description: newDescription})
+    });
+    response = await response.json();
+    return expectSuccess(response);
+}
