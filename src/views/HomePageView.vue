@@ -27,14 +27,14 @@ async function updateTaskTree() {
 
   if (value.length > 0) {
     if (currentTaskIdInInTree) {
-      setSelectedTask(currentTaskId)
+      await setSelectedTask(currentTaskId)
     } else {
-      setSelectedTask(value[0].taskId)
+      await setSelectedTask(value[0].taskId)
     }
   } else {
-    setSelectedTask(undefined);
+    await setSelectedTask(undefined);
   }
-  if (selectedTask.value != undefined && selectedNote.value == undefined) {
+  if (selectedTask.value != undefined && selectedTask.value.taskNotes != undefined && selectedNote.value == undefined) {
     selectedNote.value = selectedTask.value.taskNotes.length > 0 ? selectedTask.value.taskNotes[0].noteId : null;
   }
   treeData.value = value
