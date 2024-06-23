@@ -34,6 +34,9 @@ async function updateTaskTree() {
   } else {
     setSelectedTask(undefined);
   }
+  if (selectedTask.value != undefined && selectedNote.value == undefined) {
+    selectedNote.value = selectedTask.value.taskNotes.length > 0 ? selectedTask.value.taskNotes[0].noteId : null;
+  }
   treeData.value = value
 }
 
@@ -72,13 +75,15 @@ async function deleteNote() {
   let noteId = selectedNote.value;
   await deleteTaskNotes(organizationId, taskId, noteId);
   await updateTaskTree();
-  selectedNote.value = null;
+  let newNoteId = selectedTask.value.taskNotes.length > 0 ? selectedTask.value.taskNotes[0].noteId : null;
+  selectedNote.value = newNoteId;
 }
 
 async function createNewNote() {
   let organizationId = organization.current;
   let taskId = selectedTask.value.taskId;
-  await createNote(organizationId, taskId);
+  let r = await createNote(organizationId, taskId);
+  selectedNote.value = r;
   await updateTaskTree();
 };
 
