@@ -10,6 +10,7 @@ function expectSuccess(response) {
     if (code>= 200 && code < 300) {
         return response.payload;
     }
+    alert(`We are Sorry!\n Something failed in our BackEnd\nerror: ${code}\n\n${response.message}`)
     console.error(response.message);
     return null;
 }
