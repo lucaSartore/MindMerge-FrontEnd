@@ -24,6 +24,7 @@ let currentOrganization = organization.current;
 async function createOrganizationWrapper(organizationName) {
   let r = await createOrganization(organizationName,loggedUser.id);
   if (r != undefined) {
+    currentOrganization = r;
     await updateOrganization();
     return true;
   }
