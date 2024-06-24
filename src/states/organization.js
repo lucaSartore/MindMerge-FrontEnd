@@ -18,7 +18,8 @@ export const organization = reactive({
 })
 
 
-export async function updateOrganization(currentOrganizationIndex) {
+export async function updateOrganization(currentOrganizationId) {
+
 
     if(loggedUser.id == undefined){
         return
@@ -30,18 +31,24 @@ export async function updateOrganization(currentOrganizationIndex) {
             return {
                 id: organizationId,
                 name: await getOrganizationName(organizationId),
-                initialized: true
             }
         }
     )
 
     organization.organizations = await Promise.all(organizations)
-    if(organization.organizations.length > 0){
-        if (currentOrganizationIndex != undefined && currentOrganizationIndex < organization.organizations.length){
-            organization.current = organization.organizations[currentOrganizationIndex].id
-        }else{
-            organization.current = organization.organizations[organization.organizations.length-1].id
-        }
+
+    let currentOrganizationIndex = undefined;
+    if (currentOrganizationId != undefined){
+        currentOrganizationIndex = organization.organizations.findIndex(organization => organization.id == currentOrganizationId)
+    }else if (organization.organizations.length > 0){
+        currentOrganizationIndex = organization.organizations.length - 1
+    }
+    if (currentOrganizationIndex == undefined){
+        organization.current = undefined
+        organization.initialized = false
+    }else{
+        organization.current = organization.organizations[currentOrganizationIndex].id
+        organization.initialized = true
     }
 }
 
