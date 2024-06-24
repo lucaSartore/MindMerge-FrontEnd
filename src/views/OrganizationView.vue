@@ -119,7 +119,7 @@ updateUserList();
 
       <label for="organization-select">Select Organization:</label>
       <select id="organization-select" v-model="currentOrganization"
-        @change="updateOrganization(currentOrganization+0); updateUserList()">
+        @change="updateOrganization(currentOrganization+0).then((_) => updateUserList())">
         <option v-for="org in organization.organizations" :key="org.id" :value="org.id">
           {{ org.name }}
         </option>
