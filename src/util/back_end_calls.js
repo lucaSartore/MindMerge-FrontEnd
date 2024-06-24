@@ -6,6 +6,7 @@ import TaskStatus from '../common_infrastructure_es6/task_status.js'
 import TaskNote from '../common_infrastructure_es6/task_note.js'
 const Organization = organizationModule.Organization
 import { loggedUser } from '../states/loggedUser.js'
+import {startLoadingRequest,endLoadingRequest} from '../states/loadingRequests.js'
 
 async function fetchWrapper(uri, config) {
     if (config == undefined) {
@@ -17,7 +18,15 @@ async function fetchWrapper(uri, config) {
 
     config.headers.token = loggedUser.token;
 
-    return await fetch(uri, config);
+    let result = undefined;
+    startLoadingRequest();
+    try{
+        result = await fetch(uri, config);
+    }catch(e){
+        alert("Error in fetch request: " + e);
+    }
+    endLoadingRequest();
+    return result;
 }
 
 /**
