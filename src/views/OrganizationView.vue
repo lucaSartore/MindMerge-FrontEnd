@@ -26,6 +26,7 @@ async function createOrganizationWrapper(organizationName) {
   if (r != undefined) {
     currentOrganization = r;
     await updateOrganization();
+    await updateUserList();
     return true;
   }
   return false;
