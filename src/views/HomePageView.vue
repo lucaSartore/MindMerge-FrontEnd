@@ -2,7 +2,7 @@
 import TreeMenu from '../components/TreeMenu.vue';
 import { ref } from 'vue';
 import { organization } from '../states/organization.js'
-import { getTaskTree, createTask, updateTaskName, createNote, updateTaskNotes, deleteTaskNotes, removeAssigneeFromTask, addAssigneeToTask, getUserIdByName, deleteTask, updateTaskStatus, getTaskAutomaticReport } from '../util/back_end_calls.js'
+import { getTaskTree, createTask, updateTaskName, createNote, updateTaskNotes, deleteTaskNotes, removeAssigneeFromTask, addAssigneeToTask, getUserIdByName, deleteTask, updateTaskStatus, getTaskAutomaticReport, updateTaskDescription } from '../util/back_end_calls.js'
 import { loggedUser } from '../states/loggedUser.js'
 import { setSelectedTask, selectedAssignees, updateAssignees } from '../states/task.js';
 import { selectedTask } from '../states/task.js';
@@ -148,13 +148,11 @@ function closeAutomaticReportPopup() {
   automaticReportQuestion.value = '';
 }
 
-async function editTaskDescription(){
+async function editTaskDescription(newDescription) {
   let organizationId = organization.current;
   let taskId = selectedTask.value.taskId;
   await updateTaskDescription(organizationId, taskId, newDescription)
 }
-
-createChildTask("Test", 1)
 
 updateTaskTree()
 
@@ -201,88 +199,17 @@ updateTaskTree()
             <button @click="showAutomaticReportPopup = true">Get automatic Report</button>
           </div>
           <br>
-          <div class="manage-task-notes">
-            <h2>Task notes
-              <button @click="createNewNote()">create New Note</button>
-              <button @click="deleteNote()">delete selected Note</button>
-              <h3> Select note:
-                <select id="noteSelector" v-model="selectedNote" style="width: 200px;">
-                  <option v-for="note in selectedTask.taskNotes" :key="note.noteId" :value="note.noteId">
-                    {{ note.noteId }}
-                  </option>
-                </select>
-              </h3>
-            </h2>
-            <br>
-            <div v-if="selectedTask.taskNotes[selectedNote - 1] != undefined">
-              <div v-if="selectedTask.taskNotes[selectedNote - 1] != undefined">
-                <div class="task-note-container">
-                  <p class="task-notes-label">Note {{ selectedNote }}
-                    <UpdateButton :text="selectedTask.taskNotes[selectedNote - 1].notes"
-                      :updateFunction="updateTaskNotesWrapper" :argsForUpdateFunction="null"
-                      :callbackAfterUpdate="updateTaskTree">
-                    </UpdateButton>
-                  </p>
-                  <p class="task-notes-text">{{ selectedTask.taskNotes[selectedNote - 1].notes }}</p>
 
-                  <p class="last-updated">Last updated: {{ selectedTask.taskNotes[selectedNote - 1].date }}</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="manage-task-assignees">
-
-              <div v-if="showAddAssigneePopup" class="popup">
-                <div class="popup-content">
-                  <h2>Add User</h2>
-                  <label for="user-name">User Name:</label>
-                  <input id="user-name" v-model="userName" type="text" />
-                  <button @click="handleAddAssignee">OK</button>
-                  <button @click="closeAddAssigneePopup">Cancel</button>
-                  <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
-                </div>
-              </div>
-
-              <div v-if="showAutomaticReportPopup" class="popup">
-                <div class="popup-content">
-                  <h2>Automatic Report</h2>
-                  <label for="question">Question about the task</label>
-                  <input id="question" v-model="automaticReportQuestion" type="text" />
-                  <button @click="getAutomaticReport">OK</button>
-                  <button @click="closeAutomaticReportPopup">Cancel</button>
-                </div>
-              </div>
-
-
-              <h2>Assignees <button @click="showAddAssigneePopup = true">Add assignee </button></h2>
-              <ul class="assignee-list-container">
-                <li class="assignee-list" v-for="assignee in selectedAssignees">
-                  {{ assignee.name }}
-                  <button @click="removeAssigneeFromTaskWrapper(assignee.id)">Remove</button>
-                </li>
-              </ul>
-            </div>
+          <div class="task-note-container">
+            <p class="task-notes-label">
+              Task Description
+              <UpdateButton :text="selectedTask.taskDescription" :updateFunction="editTaskDescription"
+                :argsForUpdateFunction="null" :callbackAfterUpdate="updateTaskTree">
+              </UpdateButton>
+            </p>
+            <pre class="task-notes-text">{{ selectedTask.taskDescription }}</pre>
           </div>
-        </div>
-        
-        <div v-if="selectedTask.taskName!= undefined">
-          <h1> Task Description: {{ selectedTask.taskDescription }}
-            <UpdateButton :text="selectedTask.taskDescription" :updateFunction="editTaskDescription" :argsForUpdateFunction="null"
-              :callbackAfterUpdate="updateTaskTree">
-            </UpdateButton>
-          </h1>
-          <br>
-          <div class="task-status-container">
-            <h3> Task Status:
-              <select id="statusSelector" v-model="selectedTask.taskStatus" style="width: 200px;"
-                @change="changeStatusWrapper()">
-                <option v-for="status in 6" :key="status" :value="status">
-                  {{ Object.keys(TaskStatus.TaskStatus)[status] }}
-                </option>
-              </select>
-            </h3>
-            <button @click="showAutomaticReportPopup = true">Get automatic Report</button>
-          </div>
+
           <br>
           <div class="manage-task-notes">
             <h2>Task notes
@@ -306,54 +233,46 @@ updateTaskTree()
                       :callbackAfterUpdate="updateTaskTree">
                     </UpdateButton>
                   </p>
-                  <p class="task-notes-text">{{ selectedTask.taskNotes[selectedNote - 1].notes }}</p>
+                  <pre class="task-notes-text">{{ selectedTask.taskNotes[selectedNote - 1].notes }}</pre>
 
                   <p class="last-updated">Last updated: {{ selectedTask.taskNotes[selectedNote - 1].date }}</p>
                 </div>
               </div>
             </div>
 
-            <div class="manage-task-assignees">
-
-              <div v-if="showAddAssigneePopup" class="popup">
-                <div class="popup-content">
-                  <h2>Add User</h2>
-                  <label for="user-name">User Name:</label>
-                  <input id="user-name" v-model="userName" type="text" />
-                  <button @click="handleAddAssignee">OK</button>
-                  <button @click="closeAddAssigneePopup">Cancel</button>
-                  <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
-                </div>
-              </div>
-
-              <div v-if="showAutomaticReportPopup" class="popup">
-                <div class="popup-content">
-                  <h2>Automatic Report</h2>
-                  <label for="question">Question about the task</label>
-                  <input id="question" v-model="automaticReportQuestion" type="text" />
-                  <button @click="getAutomaticReport">OK</button>
-                  <button @click="closeAutomaticReportPopup">Cancel</button>
-                </div>
-              </div>
-
-
-              <h2>Assignees <button @click="showAddAssigneePopup = true">Add assignee </button></h2>
-              <ul class="assignee-list-container">
-                <li class="assignee-list" v-for="assignee in selectedAssignees">
-                  {{ assignee.name }}
-                  <button @click="removeAssigneeFromTaskWrapper(assignee.id)">Remove</button>
-                </li>
-              </ul>
-            </div>
           </div>
-        </div>
-        
-        <div v-if="selectedTask.taskName!= undefined">
-          <h1> Task Description: {{ selectedTask.taskDescription }}
-            <UpdateButton :text="selectedTask.taskDescription" :updateFunction="editTaskDescription" :argsForUpdateFunction="null"
-              :callbackAfterUpdate="updateTaskTree">
-            </UpdateButton>
-          </h1>
+          <div class="manage-task-assignees">
+
+            <div v-if="showAddAssigneePopup" class="popup">
+              <div class="popup-content">
+                <h2>Add User</h2>
+                <label for="user-name">User Name:</label>
+                <input id="user-name" v-model="userName" type="text" />
+                <button @click="handleAddAssignee">OK</button>
+                <button @click="closeAddAssigneePopup">Cancel</button>
+                <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+              </div>
+            </div>
+
+            <div v-if="showAutomaticReportPopup" class="popup">
+              <div class="popup-content">
+                <h2>Automatic Report</h2>
+                <label for="question">Question about the task</label>
+                <input id="question" v-model="automaticReportQuestion" type="text" />
+                <button @click="getAutomaticReport">OK</button>
+                <button @click="closeAutomaticReportPopup">Cancel</button>
+              </div>
+            </div>
+
+
+            <h2>Assignees <button @click="showAddAssigneePopup = true">Add assignee </button></h2>
+            <ul class="assignee-list-container">
+              <li class="assignee-list" v-for="assignee in selectedAssignees">
+                {{ assignee.name }}
+                <button @click="removeAssigneeFromTaskWrapper(assignee.id)">Remove</button>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>

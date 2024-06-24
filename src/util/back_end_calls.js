@@ -269,7 +269,7 @@ export async function updateTaskStatus(organizationId, taskId, newStatus){
 }
 
 export async function updateTaskDescription(organizationId, taskId, newDescription){
-    let response = await fetch(HOST + '/api/v1/task/'+taskId+'/description/'+newDescription + "?organization_id=" + organizationId, {
+    let response = await fetchWrapper(HOST + '/api/v1/task/'+taskId+'/description' + "?organization_id=" + organizationId, {
         method: "PUT",
         headers: {
             'Content-Type': 'application/json'
